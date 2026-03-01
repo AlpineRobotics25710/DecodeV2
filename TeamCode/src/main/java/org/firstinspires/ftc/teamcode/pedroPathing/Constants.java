@@ -18,17 +18,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12.15628) // in kilograms - TODO: need to update
-            .forwardZeroPowerAcceleration(-30.633405046849877) // TODO: need to update
-            .lateralZeroPowerAcceleration(-46.70776196795261) // TODO: need to update
-//            .translationalPIDFCoefficients(new PIDFCoefficients(0.25, 0, 0.027, 0.024))  // dont need with predictive
 
             // heading PIDF
-            .headingPIDFCoefficients(new PIDFCoefficients(2.1, 0, 0.02, 0.033))
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.0, 0, 0.1, 0.015))
+            .headingPIDFCoefficients(new PIDFCoefficients(2.1, 0, 0.02, 0.033)) // TODO: need to tune
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.0, 0, 0.1, 0.015)) // TODO: need to tune
             .useSecondaryHeadingPIDF(true)
 
-//            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.2, 0, 0.001, 0, 0.03)) // dont need with predictive
-//            .centripetalScaling(0.0005) // TODO: need to update
+            .centripetalScaling(0.0005) // TODO: need to update
 
             // get values from running automatic predictive braking tuner
             .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.2, 0, 0)); // TODO: need to update
