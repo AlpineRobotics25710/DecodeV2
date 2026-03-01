@@ -7,30 +7,75 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
-    Servo rotate1, rotate2, hood;
 
-    DcMotorEx flywheel1, flywheel2;
+    private final Servo turret1, turret2, hood;
+    private final DcMotorEx flyLeft, flyRight;
 
-    public Turret(Servo r1, Servo r2, Servo h, DcMotorEx f1, DcMotorEx f2) {
-        rotate1 = r1;
-        rotate2 = r2;
-        hood = h;
-        flywheel1 = f1;
-        flywheel2 = f2;
+    private double targetRPM = 0;
+    private double integral = 0;
+    private double lastError = 0;
+    private long lastTime = System.nanoTime();
+
+    public Turret(
+            Servo turret1,
+            Servo turret2,
+            Servo hood,
+            DcMotorEx flyLeft,
+            DcMotorEx flyRight
+    ) {
+        this.turret1 = turret1;
+        this.turret2 = turret2;
+        this.hood = hood;
+        this.flyLeft = flyLeft;
+        this.flyRight = flyRight;
     }
 
-    /**
-     * Sets hood to the close shooting position.
-     */
-    public void setHoodClose() {
-        hood.setPosition(TurretConstants.CLOSE_HOOD);
+    public void setTurretPosition(double pos) {
+        turret1.setPosition(pos);
+        turret2.setPosition(1.0 - pos);
     }
 
-    /**
-     * Sets hood to the far shooting servo position.
-     */
-    public void setHoodFar() {
-        hood.setPosition(TurretConstants.FAR_HOOD);
+    public void setHood(double pos) {
+        hood.setPosition(pos);
     }
 
+    public void setTargetRPM(double rpm) {
+        targetRPM = rpm;
+    }
+
+    public void stopFlywheel() {
+        targetRPM = 0;
+        flyLeft.setPower(0);
+        flyRight.setPower(0);
+    }
+
+    @Override
+    public void periodic() {
+
+        long now = System.nanoTime();
+        double dt = (now - lastTime) * 1e-9;
+        lastTime = now;
+
+        if (dt <= 0) return;
+
+        double velocity = (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
+        double currentRPM = velocity / TurretConstants.TICKS_PER_REV * 60.0;
+
+        double error = targetRPM - currentRPM;
+
+        integral += error * dt;
+        double derivative = (error - lastError) / dt;
+        lastError = error;
+
+        double output =
+                TurretConstants.kP * error +
+                        TurretConstants.kI * integral +
+                        TurretConstants.kD * derivative +
+                        TurretConstants.kF * targetRPM;
+
+        output = Math.max(-1, Math.min(1, output));
+
+        flyLeft.setPower(output);
+        flyRight.setPower(output);
+    }
 }
