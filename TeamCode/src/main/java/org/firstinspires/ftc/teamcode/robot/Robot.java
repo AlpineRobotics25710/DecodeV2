@@ -11,22 +11,33 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.robot.subsystem.IntakeRollers;
 import org.firstinspires.ftc.teamcode.robot.subsystem.Transfer;
 import org.firstinspires.ftc.teamcode.robot.subsystem.Turret;
+import org.firstinspires.ftc.teamcode.robot.subsystem.Drivetrain;
 
 import java.util.List;
 
-public class Robot extends com.seattlesolvers.solverslib.command.Robot {
+public class Robot {
     public List<LynxModule> allHubs; // hubs (for bulk caching and stuff)
 
-    // Drivetrain motors:
-    public static DcMotor frontLeftDrive;
-    public static DcMotor frontRightDrive;
-    public static DcMotor backLeftDrive;
-    public static DcMotor backRightDrive;
+    public final Drivetrain drivetrain;
+    public final IntakeRollers frontIntake;
+    public final IntakeRollers backIntake;
+    public final Transfer transfer;
+    public final Turret turret;
 
+    public final Limelight3A limelight;
+    public final GamepadEx driver;
+
+
+    // Drivetrain motors:
+    public static DcMotorEx frontLeftDrive;
+    public static DcMotorEx frontRightDrive;
+    public static DcMotorEx backLeftDrive;
+    public static DcMotorEx backRightDrive;
 
     // FrontRollers motors/servos:
     public CRServo frontLeftIntake, frontRightIntake;
@@ -45,35 +56,19 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public Servo flickerLeft, flickerRight;
     CRServo middleRoller;
 
+    public Robot(HardwareMap hardwareMap, GamepadEx driver) {
 
-    // Subsystems:
-    public IntakeRollers frontRollers;
-    public IntakeRollers backRollers;
-    public Turret turret;
-    public Transfer transfer;
+        this.driver = driver;
 
-    protected Limelight3A limelight;
-
-    public Follower follower;
-
-    public Robot(HardwareMap hardwareMap, OpModeType type) {
-        // Configuration of all motors and servos
+        // Init follower
+        Follower follower = org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower(hardwareMap);
+        MultipleTelemetry.addData("follower heading constraint", follower.getConstraints().getHeadingConstraint());
 
         // Drivetrain motors:
-        frontRightDrive = hardwareMap.get(DcMotor.class, "FR");
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "FL");
-        backRightDrive = hardwareMap.get(DcMotor.class, "BR");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "BL");
-
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        frontLeftDrive.setZeroPowerBehavior(BRAKE);
-        frontRightDrive.setZeroPowerBehavior(BRAKE);
-        backRightDrive.setZeroPowerBehavior(BRAKE);
-        backLeftDrive.setZeroPowerBehavior(BRAKE);
+        frontLeftDrive = hardwareMap.get(DcMotorEx.class, "FL");
+        frontRightDrive = hardwareMap.get(DcMotorEx.class, "FR");
+        backLeftDrive = hardwareMap.get(DcMotorEx.class, "BL");
+        backRightDrive = hardwareMap.get(DcMotorEx.class, "BR");
 
         // FrontRollers motors/servos:
         frontLeftIntake = hardwareMap.get(CRServo.class, "FLI");
@@ -99,23 +94,56 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         flickerRight = hardwareMap.get(Servo.class, "FlickRight");
         middleRoller = hardwareMap.get(CRServo.class, "MR");
 
+        drivetrain = new Drivetrain(
+                frontLeftDrive,
+                frontRightDrive,
+                backLeftDrive,
+                backRightDrive,
+                follower
+        );
 
-        // Subsystems:
-        frontRollers = new IntakeRollers(frontLeftIntake, frontRightIntake);
-        backRollers = new IntakeRollers(backLeftIntake, backRightIntake);
-        turret = new Turret(turret1, turret2, hood, flywheelLeft, flywheelRight);
-        transfer = new Transfer(transferLeft, transferRight, flickerLeft, flickerRight, middleRoller);
+        frontIntake = new IntakeRollers(
+                frontLeftIntake,
+                frontRightIntake
+        );
+
+        backIntake = new IntakeRollers(
+                backLeftIntake,
+                backRightIntake
+        );
+
+        transfer = new Transfer(
+                transferLeft,
+                transferRight,
+                flickerLeft,
+                flickerRight,
+                middleRoller
+        );
+
+        turret = new Turret(
+                turret1,
+                turret2,
+                hood,
+                flywheelLeft,
+                flywheelRight
+        );
 
         // Init LimeLight 3A
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(2);
         limelight.start();
 
-        // Init follower
-        follower = org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower(hardwareMap);
-        MultipleTelemetry.addData("follower heading constraint", follower.getConstraints().getHeadingConstraint());
-
         // Set directions of all motors and servos here
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        frontLeftDrive.setZeroPowerBehavior(BRAKE);
+        frontRightDrive.setZeroPowerBehavior(BRAKE);
+        backRightDrive.setZeroPowerBehavior(BRAKE);
+        backLeftDrive.setZeroPowerBehavior(BRAKE);
+
         flywheelRight.setDirection(DcMotor.Direction.REVERSE); // reverse one of the flywheel ones
 
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -131,48 +159,5 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         }
         // remember to clear cache at the end of opmodes :0
 
-        // Schedule init commands here
-        if (type == OpModeType.TELEOP) {
-            initTele();
-        } else {
-            initAuto();
-        }
-    }
-
-    /*
-     * Initialize teleop or autonomous, depending on which is used
-     */
-    public void initTele() {
-        // initialize teleop-specific scheduler
-    }
-
-    public void initAuto() {
-        // initialize auto-specific scheduler
-    }
-
-    public void loop() {
-        CommandScheduler.getInstance().run();
-        follower.update();
-
-        // Add robot telemetry here
-        MultipleTelemetry.addData("Current Pose", follower.getPose());
-
-        clearHubCache();
-    }
-
-    private void clearHubCache() {
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
-    }
-
-    public void end() {
-        reset();
-        clearHubCache();
-    }
-
-    // enum to specify opmode type
-    public enum OpModeType {
-        TELEOP, AUTO
     }
 }
