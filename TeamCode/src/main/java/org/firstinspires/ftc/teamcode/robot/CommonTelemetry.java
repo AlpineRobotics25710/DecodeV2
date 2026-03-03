@@ -16,11 +16,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Arrays;
 
-public class MultipleTelemetry {
+public class CommonTelemetry {
     private static com.acmerobotics.dashboard.telemetry.MultipleTelemetry multipleTelemetry;
 
     // Make singleton
-    private MultipleTelemetry() {
+    private CommonTelemetry() {
     }
 
     public static void init(Telemetry robotTelemetry) {
