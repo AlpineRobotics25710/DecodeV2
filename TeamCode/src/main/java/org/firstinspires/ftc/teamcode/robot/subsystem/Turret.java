@@ -11,7 +11,7 @@ public class Turret extends SubsystemBase {
     private final Servo turret1, turret2, hood;
     private final DcMotorEx flyLeft, flyRight;
 
-    private double targetRPM = 0;
+    private double targetTPS = 0;
     private double integral = 0;
     private double lastError = 0;
     private long lastTime = System.nanoTime();
@@ -39,12 +39,12 @@ public class Turret extends SubsystemBase {
         hood.setPosition(pos);
     }
 
-    public void setTargetRPM(double rpm) {
-        targetRPM = rpm;
+    public void setTargetTPS(double rpm) {
+        targetTPS = rpm;
     }
 
     public void stopFlywheel() {
-        targetRPM = 0;
+        targetTPS = 0;
         flyLeft.setPower(0);
         flyRight.setPower(0);
     }
@@ -61,7 +61,7 @@ public class Turret extends SubsystemBase {
         double velocity = (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
         double currentRPM = velocity / TurretConstants.TICKS_PER_REV * 60.0;
 
-        double error = targetRPM - currentRPM;
+        double error = targetTPS - currentRPM;
 
         integral += error * dt;
         double derivative = (error - lastError) / dt;
@@ -71,7 +71,7 @@ public class Turret extends SubsystemBase {
                 TurretConstants.kP * error +
                         TurretConstants.kI * integral +
                         TurretConstants.kD * derivative +
-                        TurretConstants.kF * targetRPM;
+                        TurretConstants.kF * targetTPS;
 
         output = Math.max(-1, Math.min(1, output));
 
