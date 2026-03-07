@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class IntakeRollers extends SubsystemBase {
@@ -10,6 +11,7 @@ public class IntakeRollers extends SubsystemBase {
     public IntakeRollers(CRServo left, CRServo right) {
         this.left = left;
         this.right = right;
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     public void setPower(double power) {

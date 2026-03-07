@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
 import com.pedropathing.follower.Follower;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+
+import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -11,6 +14,7 @@ public class Drivetrain extends SubsystemBase {
     public Drivetrain(Follower follower, boolean robotCentric) {
         this.follower = follower;
         this.robotCentric = robotCentric;
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     public void teleOpDrive(double forward, double strafe, double turn) {

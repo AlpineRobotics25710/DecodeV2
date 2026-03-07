@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.subsystem;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
@@ -28,6 +29,7 @@ public class Turret extends SubsystemBase {
         this.hood = hood;
         this.flyLeft = flyLeft;
         this.flyRight = flyRight;
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     public void setTurretPosition(double pos) {

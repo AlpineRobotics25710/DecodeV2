@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.subsystem;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class Transfer extends SubsystemBase {
@@ -23,6 +24,7 @@ public class Transfer extends SubsystemBase {
         this.flickLeft = flickLeft;
         this.flickRight = flickRight;
         this.middle = middle;
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     public void setLeftMotor(double power) {
