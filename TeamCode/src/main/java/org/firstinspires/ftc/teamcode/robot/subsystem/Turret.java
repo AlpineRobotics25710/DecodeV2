@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
 
-    private final Servo turret1, turret2, hood;
+    private final Servo turretLeft, turretRight, hood;
     private final DcMotorEx flyLeft, flyRight;
 
     private double targetTPS = 0;
@@ -23,16 +23,16 @@ public class Turret extends SubsystemBase {
             DcMotorEx flyLeft,
             DcMotorEx flyRight
     ) {
-        this.turret1 = turret1;
-        this.turret2 = turret2;
+        this.turretLeft = turret1;
+        this.turretRight = turret2;
         this.hood = hood;
         this.flyLeft = flyLeft;
         this.flyRight = flyRight;
     }
 
     public void setTurretPosition(double pos) {
-        turret1.setPosition(pos);
-        turret2.setPosition(1.0 - pos);
+        turretLeft.setPosition(pos);
+        turretRight.setPosition(pos);
     }
 
     public void setHood(double pos) {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
 import com.bylazar.field.Style;
@@ -17,14 +18,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.Arrays;
 
 public class CommonTelemetry {
-    private static com.acmerobotics.dashboard.telemetry.MultipleTelemetry multipleTelemetry;
+    private static MultipleTelemetry multipleTelemetry;
 
     // Make singleton
     private CommonTelemetry() {
     }
 
     public static void init(Telemetry robotTelemetry) {
-        multipleTelemetry = new com.acmerobotics.dashboard.telemetry.MultipleTelemetry(robotTelemetry, FtcDashboard.getInstance().getTelemetry(), PanelsTelemetry.INSTANCE.getFtcTelemetry());
+        multipleTelemetry = new MultipleTelemetry(robotTelemetry, FtcDashboard.getInstance().getTelemetry(), PanelsTelemetry.INSTANCE.getFtcTelemetry());
     }
 
     public static void debug(Object... data) {
