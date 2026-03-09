@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.*;
 import com.seattlesolvers.solverslib.command.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.robot.commands.outtake.AlignTurretToGoalCommand;
+import org.firstinspires.ftc.teamcode.robot.constants.enums.Alliance;
 import org.firstinspires.ftc.teamcode.robot.subsystem.*;
 
 public class AlpineRobot extends Robot {
@@ -18,11 +20,15 @@ public class AlpineRobot extends Robot {
     public final Turret turret;
 
     public final Limelight3A limelight;
+    public final Follower follower;
 
+    /** Default to blue alliance **/
     public AlpineRobot(HardwareMap hardwareMap) {
+        this(hardwareMap, Alliance.BLUE);
+    }
 
-        // Create follower
-        Follower follower = Constants.createFollower(hardwareMap);
+    public AlpineRobot(HardwareMap hardwareMap, Alliance alliance) {
+        follower = Constants.createFollower(hardwareMap);
 
         // Drivetrain
         drivetrain = new Drivetrain(follower, true);
@@ -41,26 +47,15 @@ public class AlpineRobot extends Robot {
         DcMotorEx transferLeft = hardwareMap.get(DcMotorEx.class, "TransferLeft");
         DcMotorEx transferRight = hardwareMap.get(DcMotorEx.class, "TransferRight");
 
-        Servo flickLeft = hardwareMap.get(Servo.class, "FlickLeft");
-        Servo flickRight = hardwareMap.get(Servo.class, "FlickRight");
-
-        CRServo middleRoller = hardwareMap.get(CRServo.class, "MR");
-
         // Reverse any motors and stuff here
         transferLeft.setDirection(DcMotorEx.Direction.REVERSE);
         transferRight.setDirection(DcMotorEx.Direction.FORWARD);
 
-        transfer = new Transfer(
-                transferLeft,
-                transferRight,
-                flickLeft,
-                flickRight,
-                middleRoller
-        );
+        transfer = new Transfer(transferLeft, transferRight);
 
         // Turret
-        Servo turretRight = hardwareMap.get(Servo.class, "T1");
-        Servo turretLeft = hardwareMap.get(Servo.class, "T2");
+        CRServo turretRight = hardwareMap.get(CRServo.class, "T1");
+        CRServo turretLeft = hardwareMap.get(CRServo.class, "T2");
         Servo hood = hardwareMap.get(Servo.class, "Hood");
 
         DcMotorEx flyLeft = hardwareMap.get(DcMotorEx.class, "FlyLeft");
@@ -78,9 +73,10 @@ public class AlpineRobot extends Robot {
         // Limelight init
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(2);
+        turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
         limelight.start();
 
         // Manual Bulk Caching
-        setBulkReading(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
+        setBulkReading(hardwareMap, LynxModule.BulkCachingMode.AUTO);
     }
 }

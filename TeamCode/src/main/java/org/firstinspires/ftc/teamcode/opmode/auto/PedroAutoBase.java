@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 

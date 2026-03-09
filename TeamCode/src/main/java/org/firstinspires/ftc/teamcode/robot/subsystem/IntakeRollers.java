@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.teamcode.robot.constants.IntakeRollerConstants;
+
 public class IntakeRollers extends SubsystemBase {
 
     private final CRServo left, right;
@@ -20,6 +22,6 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public void stop() {
-        setPower(0);
+        setPower(IntakeRollerConstants.OFF);
     }
 }

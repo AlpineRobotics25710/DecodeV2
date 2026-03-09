@@ -2,7 +2,12 @@ package org.firstinspires.ftc.teamcode.robot.constants;
 
 public class TurretConstants {
 
-    public static double kP, kI, kD, kF;
+    public static double flywheelKP, flywheelKI, flywheelKD, flywheelKF;
+    public static double turretKP, turretKI, turretKD, turretKF;
+
+    public static double TURRET_MAX_POWER = 0.6;
+    public static double TURRET_TX_TOLERANCE_DEG = 0.5;
+    public static double TURRET_RECOVERY_POWER = 0.15; // slow creep to re-acquire tag
 
     public static  double TICKS_PER_REV = 112; // 28 PPR * 4 = 112
     // Hood positions

@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.intake.IntakeCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.intake.ReverseIntakeCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.intake.StopIntakeCommand;
 
 public abstract class BaseTeleOp extends CommandOpMode {
 
@@ -12,27 +16,25 @@ public abstract class BaseTeleOp extends CommandOpMode {
     protected GamepadEx driver1;
     protected GamepadEx driver2;
 
+    public abstract void initGamepads();
+
+    public abstract GamepadEx driver();
+
+    public abstract GamepadButton intakeButton();
+
+    public abstract GamepadButton reverseIntakeButton();
+
     @Override
     public void initialize() {
+        initGamepads();
 
-        // Wrap gamepads
-        driver1 = new GamepadEx(gamepad1);
-        driver2 = new GamepadEx(gamepad2);
-
-        // Create robot
         robot = new AlpineRobot(hardwareMap);
+        robot.drivetrain.setDefaultCommand(new PedroTeleOpDriveCommand(robot.drivetrain, driver()));
 
-        // Set default drivetrain command
-        robot.drivetrain.setDefaultCommand(
-                new PedroTeleOpDriveCommand(robot.drivetrain, driver1)
-        );
-
-        // Let child TeleOp define button bindings
-        configureBindings();
+        // Use whileHeld for a cleaner implementation
+        intakeButton().whenPressed(new IntakeCommand(robot.frontIntake, robot.backIntake));
+        intakeButton().whenReleased(new StopIntakeCommand(robot.frontIntake, robot.backIntake));
+        reverseIntakeButton().whileHeld(new ReverseIntakeCommand(robot.frontIntake, robot.backIntake));
+        reverseIntakeButton().whenReleased(new StopIntakeCommand(robot.frontIntake, robot.backIntake));
     }
-
-    /**
-     * Child classes define button mappings here.
-     */
-    protected abstract void configureBindings();
 }
