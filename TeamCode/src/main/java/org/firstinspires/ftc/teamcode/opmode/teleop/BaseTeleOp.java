@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.ReverseIntakeCommand;
-import org.firstinspires.ftc.teamcode.robot.commands.intake.StopIntakeCommand;
 
 public abstract class BaseTeleOp extends CommandOpMode {
 
@@ -32,9 +31,7 @@ public abstract class BaseTeleOp extends CommandOpMode {
         robot.drivetrain.setDefaultCommand(new PedroTeleOpDriveCommand(robot.drivetrain, driver()));
 
         // Use whileHeld for a cleaner implementation
-        intakeButton().whenPressed(new IntakeCommand(robot.frontIntake, robot.backIntake));
-        intakeButton().whenReleased(new StopIntakeCommand(robot.frontIntake, robot.backIntake));
-        reverseIntakeButton().whileHeld(new ReverseIntakeCommand(robot.frontIntake, robot.backIntake));
-        reverseIntakeButton().whenReleased(new StopIntakeCommand(robot.frontIntake, robot.backIntake));
+        intakeButton().whenHeld(new IntakeCommand(robot.frontIntake, robot.backIntake));
+        reverseIntakeButton().whenHeld(new ReverseIntakeCommand(robot.frontIntake, robot.backIntake));
     }
 }
