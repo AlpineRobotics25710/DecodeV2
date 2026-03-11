@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -47,6 +48,16 @@ public class Turret extends SubsystemBase {
         );
 
         turretPIDF.setTolerance(TurretConstants.TURRET_TX_TOLERANCE_DEG);
+        flywheelPIDF.setTolerance(TurretConstants.FLYWHEEL_TPS_TOLERANCE);
+    }
+
+    public boolean isFlywheelAtTargetTPS() {
+        if (targetTPS == 0) return false;
+        return flywheelPIDF.atSetPoint();
+    }
+
+    public boolean isTurretAligned() {
+        return hasAlignmentTarget && turretPIDF.atSetPoint();
     }
 
     public void setTurretPower(double power) {
@@ -59,8 +70,13 @@ public class Turret extends SubsystemBase {
         hood.setPosition(pos);
     }
 
-    public void setTargetTPS(double tps) {
+    public void setFlywheelTargetTPS(double tps) {
         targetTPS = tps;
+    }
+
+    public void setFlywheelPower(double power) {
+        flyLeft.setPower(power);
+        flyRight.setPower(power);
     }
 
     public void stopFlywheel() {
@@ -106,9 +122,7 @@ public class Turret extends SubsystemBase {
         double currentTPS = (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
         double flywheelOutput = flywheelPIDF.calculate(currentTPS, targetTPS);
         flywheelOutput = MathUtils.clamp(flywheelOutput, -1, 1);
-
-        flyLeft.setPower(flywheelOutput);
-        flyRight.setPower(flywheelOutput);
+        setFlywheelPower(flywheelOutput);
 
         if (!hasAlignmentTarget) {
             if (inRecovery && lastKnownErrorSign != 0) {

@@ -8,6 +8,7 @@ import com.seattlesolvers.solverslib.command.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.commands.outtake.AlignTurretToGoalCommand;
+import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 import org.firstinspires.ftc.teamcode.robot.constants.enums.Alliance;
 import org.firstinspires.ftc.teamcode.robot.subsystem.*;
 
@@ -50,6 +51,10 @@ public class AlpineRobot extends Robot {
         // Reverse any motors and stuff here
         transferLeft.setDirection(DcMotorEx.Direction.REVERSE);
         transferRight.setDirection(DcMotorEx.Direction.FORWARD);
+        transferLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        transferRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        transferLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        transferRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         transfer = new Transfer(transferLeft, transferRight);
 
@@ -68,15 +73,20 @@ public class AlpineRobot extends Robot {
         flyRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        turret = new Turret(turretRight, turretLeft, hood, flyLeft, flyRight);
-
         // Limelight init
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(2);
-        turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
         limelight.start();
+
+        // Turret
+        turret = new Turret(turretRight, turretLeft, hood, flyLeft, flyRight);
+        turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
 
         // Manual Bulk Caching
         setBulkReading(hardwareMap, LynxModule.BulkCachingMode.AUTO);
+    }
+
+    public double getDistanceFromGoal() {
+        return follower.getPose().distanceFrom(TurretConstants.GOAL_POSE);
     }
 }

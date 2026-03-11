@@ -1,15 +1,26 @@
 package org.firstinspires.ftc.teamcode.robot.constants;
 
+import com.pedropathing.geometry.Pose;
+
 public class TurretConstants {
+
+    public static Pose GOAL_POSE = new Pose(0, 144);
 
     public static double flywheelKP, flywheelKI, flywheelKD, flywheelKF;
     public static double turretKP, turretKI, turretKD, turretKF;
 
-    public static double TURRET_MAX_POWER = 0.6;
-    public static double TURRET_TX_TOLERANCE_DEG = 0.5;
-    public static double TURRET_RECOVERY_POWER = 0.15; // slow creep to re-acquire tag
+    public static double TURRET_MAX_POWER = 0.85;
+    public static double TURRET_TX_TOLERANCE_DEG = 1;
+    public static double TURRET_RECOVERY_POWER = 0.2; // slow creep to re-acquire tag
 
-    public static  double TICKS_PER_REV = 112; // 28 PPR * 4 = 112
+    // Flywheel velocity tolerance (ticks per second) to consider "at speed"
+    public static double FLYWHEEL_TPS_TOLERANCE = 50; // TODO: tune
+
+    // How long (seconds) to run the transfer motors to fire one ball
+    public static double SHOOT_DURATION_SECONDS = 0.5; // TODO: tune
+
+    public static double TICKS_PER_REV = 112; // 28 PPR * 4 = 112
+
     // Hood positions
     public static double CLOSE_HOOD = 0; // TODO: need to find
     public static double FAR_HOOD = 0; // TODO: need to find

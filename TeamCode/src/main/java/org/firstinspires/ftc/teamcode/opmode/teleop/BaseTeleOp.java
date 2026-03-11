@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.ReverseIntakeCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.outtake.ShootCommand;
 
 public abstract class BaseTeleOp extends CommandOpMode {
 
@@ -23,6 +24,8 @@ public abstract class BaseTeleOp extends CommandOpMode {
 
     public abstract GamepadButton reverseIntakeButton();
 
+    public abstract GamepadButton shootButton();
+
     @Override
     public void initialize() {
         initGamepads();
@@ -30,8 +33,12 @@ public abstract class BaseTeleOp extends CommandOpMode {
         robot = new AlpineRobot(hardwareMap);
         robot.drivetrain.setDefaultCommand(new PedroTeleOpDriveCommand(robot.drivetrain, driver()));
 
-        // Use whileHeld for a cleaner implementation
         intakeButton().whenHeld(new IntakeCommand(robot.frontIntake, robot.backIntake));
         reverseIntakeButton().whenHeld(new ReverseIntakeCommand(robot.frontIntake, robot.backIntake));
+
+        // A button: transfer ball into flywheel and shoot.
+        // ShootCommand receives a DoubleSupplier so the distance is read at the moment
+        // the button is pressed, not at robot initialisation time.
+        shootButton().whenPressed(new ShootCommand(robot.turret, robot.transfer, robot::getDistanceFromGoal));
     }
 }

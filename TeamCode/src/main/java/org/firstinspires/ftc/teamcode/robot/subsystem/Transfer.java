@@ -21,7 +21,7 @@ public class Transfer extends SubsystemBase {
         right.setPower(TransferConstants.ON);
     }
 
-    public void stopMotors() {
+    public void off() {
         left.setPower(TransferConstants.OFF);
         right.setPower(TransferConstants.OFF);
     }
