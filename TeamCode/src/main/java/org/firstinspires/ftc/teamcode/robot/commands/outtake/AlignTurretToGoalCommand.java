@@ -22,8 +22,8 @@ public class AlignTurretToGoalCommand extends CommandBase {
         this.limelight = limelight;
         this.follower = follower;
 
-        // Assign target ID based on alliance (example IDs for Into The Deep)
-        this.targetTagId = (alliance == Alliance.BLUE) ? 12 : 15;
+        // Assign target ID based on alliance (blue goal is 20 red goal is 24)
+        this.targetTagId = (alliance == Alliance.BLUE) ? 20 : 24;
 
         addRequirements(turret);
     }

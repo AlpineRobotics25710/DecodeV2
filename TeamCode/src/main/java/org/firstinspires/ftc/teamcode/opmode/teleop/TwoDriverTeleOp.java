@@ -33,4 +33,19 @@ public class TwoDriverTeleOp extends BaseTeleOp {
     public GamepadButton shootButton() {
         return driver2.getGamepadButton(GamepadKeys.Button.A);
     }
+    
+    @Override
+    public GamepadButton frontSidePriorityButton() {
+        return driver2.getGamepadButton(GamepadKeys.Button.X);
+    }
+    
+    @Override
+    public GamepadButton backSidePriorityButton() {
+        return driver2.getGamepadButton(GamepadKeys.Button.B);
+    }
+    
+    @Override
+    public GamepadButton clearQueueButton() {
+        return driver2.getGamepadButton(GamepadKeys.Button.Y);
+    }
 }
