@@ -59,39 +59,14 @@ public class ValueTester extends LinearOpMode {
             flyRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        CommonTelemetry.addData("=== TRANSFER ===", "");
-        CommonTelemetry.addData("Transfer Power (set)", TransferPower);
-        CommonTelemetry.addData("TransferLeft  velocity", transferLeft.getVelocity());
-        CommonTelemetry.addData("TransferRight velocity", transferRight.getVelocity());
 
-        CommonTelemetry.addData("=== FRONT INTAKE ===", "");
-        CommonTelemetry.addData("Front Intake Power (set)", FrontIntakePower);
-        CommonTelemetry.addData("FrontLeft  power", frontLeftIntake.getPower());
-        CommonTelemetry.addData("FrontRight power", frontRightIntake.getPower());
-
-        CommonTelemetry.addData("=== BACK INTAKE ===", "");
-        CommonTelemetry.addData("Back Intake Power (set)", BackIntakePower);
-        CommonTelemetry.addData("BackLeft  power", backLeftIntake.getPower());
-        CommonTelemetry.addData("BackRight power", backRightIntake.getPower());
-
-        CommonTelemetry.addData("=== FLYWHEEL ===", "");
-        CommonTelemetry.addData("FlyWheel Velocity (set)", FlyWheelVelocity);
-        CommonTelemetry.addData("FlyLeft  velocity", flyLeft.getVelocity());
-        CommonTelemetry.addData("FlyRight velocity", flyRight.getVelocity());
-
-        CommonTelemetry.addData("=== HOOD ===", "");
-        CommonTelemetry.addData("Hood Pos (set)", HoodPos);
-        CommonTelemetry.addData("Hood Pos (actual)", hood.getPosition());
-
-        CommonTelemetry.addData("=== TURRET ===", "");
-        CommonTelemetry.addData("Turret Power (set)", TurretPower);
-        CommonTelemetry.addData("TurretLeft  power", turretLeft.getPower());
-        CommonTelemetry.addData("TurretRight power", turretRight.getPower());
             CommonTelemetry.init(telemetry);
 
             waitForStart();
 
             while (!isStopRequested() && opModeIsActive()) {
+
+
                 hood.setPosition(HoodPos);
                 frontLeftIntake.setPower(FrontIntakePower);
                 frontRightIntake.setPower(FrontIntakePower);
@@ -107,6 +82,37 @@ public class ValueTester extends LinearOpMode {
 
                 turretLeft.setPower(TurretPower);
                 transferRight.setPower(TurretPower);
+
+                CommonTelemetry.addData("=== TRANSFER ===", "");
+                CommonTelemetry.addData("Transfer Power (set)", TransferPower);
+                CommonTelemetry.addData("TransferLeft  velocity", transferLeft.getVelocity());
+                CommonTelemetry.addData("TransferRight velocity", transferRight.getVelocity());
+
+                CommonTelemetry.addData("=== FRONT INTAKE ===", "");
+                CommonTelemetry.addData("Front Intake Power (set)", FrontIntakePower);
+                CommonTelemetry.addData("FrontLeft  power", frontLeftIntake.getPower());
+                CommonTelemetry.addData("FrontRight power", frontRightIntake.getPower());
+
+                CommonTelemetry.addData("=== BACK INTAKE ===", "");
+                CommonTelemetry.addData("Back Intake Power (set)", BackIntakePower);
+                CommonTelemetry.addData("BackLeft  power", backLeftIntake.getPower());
+                CommonTelemetry.addData("BackRight power", backRightIntake.getPower());
+
+                CommonTelemetry.addData("=== FLYWHEEL ===", "");
+                CommonTelemetry.addData("FlyWheel Velocity (set)", FlyWheelVelocity);
+                CommonTelemetry.addData("FlyLeft  velocity", flyLeft.getVelocity());
+                CommonTelemetry.addData("FlyRight velocity", flyRight.getVelocity());
+
+                CommonTelemetry.addData("=== HOOD ===", "");
+                CommonTelemetry.addData("Hood Pos (set)", HoodPos);
+                CommonTelemetry.addData("Hood Pos (actual)", hood.getPosition());
+
+                CommonTelemetry.addData("=== TURRET ===", "");
+                CommonTelemetry.addData("Turret Power (set)", TurretPower);
+                CommonTelemetry.addData("TurretLeft  power", turretLeft.getPower());
+                CommonTelemetry.addData("TurretRight power", turretRight.getPower());
+
+                telemetry.update();
             }
         }
     }
