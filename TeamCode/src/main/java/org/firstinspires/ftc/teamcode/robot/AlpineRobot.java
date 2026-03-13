@@ -35,11 +35,11 @@ public class AlpineRobot extends Robot {
         drivetrain = new Drivetrain(follower, true);
 
         // Intake
-        CRServo frontLeftIntake = hardwareMap.get(CRServo.class, "FLI");
-        CRServo frontRightIntake = hardwareMap.get(CRServo.class, "FRI");
+        CRServo frontLeftIntake = hardwareMap.get(CRServo.class, "FrontLeftIntake");
+        CRServo frontRightIntake = hardwareMap.get(CRServo.class, "FrontRightIntake");
 
-        CRServo backLeftIntake = hardwareMap.get(CRServo.class, "BLI");
-        CRServo backRightIntake = hardwareMap.get(CRServo.class, "BRI");
+        CRServo backLeftIntake = hardwareMap.get(CRServo.class, "BackLeftIntake");
+        CRServo backRightIntake = hardwareMap.get(CRServo.class, "BackRightIntake");
 
         frontIntake = new IntakeRollers(frontLeftIntake, frontRightIntake);
         backIntake = new IntakeRollers(backLeftIntake, backRightIntake);
@@ -59,8 +59,8 @@ public class AlpineRobot extends Robot {
         transfer = new Transfer(transferLeft, transferRight);
 
         // Turret
-        CRServo turretRight = hardwareMap.get(CRServo.class, "T1");
-        CRServo turretLeft = hardwareMap.get(CRServo.class, "T2");
+        CRServo turretRight = hardwareMap.get(CRServo.class, "TurretRight");
+        CRServo turretLeft = hardwareMap.get(CRServo.class, "TurretLeft");
         Servo hood = hardwareMap.get(Servo.class, "Hood");
 
         DcMotorEx flyLeft = hardwareMap.get(DcMotorEx.class, "FlyLeft");
