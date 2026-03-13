@@ -24,4 +24,8 @@ public class IntakeRollers extends SubsystemBase {
     public void stop() {
         setPower(IntakeRollerConstants.OFF);
     }
+    
+    public double getPower() {
+        return (left.getPower() + right.getPower()) / 2.0;
+    }
 }

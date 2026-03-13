@@ -5,7 +5,7 @@ import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-@TeleOp(name = "One Driver TeleOp")
+@TeleOp(group = "prod")
 public class OneDriverTeleOp extends BaseTeleOp {
 
     @Override

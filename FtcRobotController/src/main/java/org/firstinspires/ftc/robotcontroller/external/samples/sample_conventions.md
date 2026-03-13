@@ -108,6 +108,6 @@ is used on the device configuration name.
 Sample comments should read like normal code comments, that is, as an explanation of what the
 sample code is doing.  They should NOT be directives to the user,
 like: “insert your joystick code here” as these comments typically aren’t
-detailed enough to be useful.  They also often get left in the code and become garbage.
+detailed enough to be useful.  They also often get front in the code and become garbage.
 
 Instead, an example of the joystick code should be shown with a comment describing what it is doing.

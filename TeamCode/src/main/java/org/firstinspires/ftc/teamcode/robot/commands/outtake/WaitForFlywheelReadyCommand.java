@@ -25,7 +25,7 @@ public class WaitForFlywheelReadyCommand extends CommandBase {
     @Override
     public void initialize() {
         double dist = distanceSupplier.getAsDouble();
-        turret.setHood(Interpolator.getHoodPos(dist));
+        turret.setHoodPosition(Interpolator.getHoodPos(dist));
         turret.setFlywheelTargetTPS(Interpolator.getFlywheelTPS(dist));
     }
 

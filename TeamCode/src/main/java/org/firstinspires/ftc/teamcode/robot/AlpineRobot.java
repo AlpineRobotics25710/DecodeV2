@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.*;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -20,7 +21,7 @@ public class AlpineRobot extends Robot {
     public final Transfer transfer;
     public final Turret turret;
 
-    public final Limelight3A limelight;
+    //public final Limelight3A limelight;
     public final Follower follower;
 
     /** Default to blue alliance **/
@@ -37,30 +38,34 @@ public class AlpineRobot extends Robot {
         // Intake
         CRServo frontLeftIntake = hardwareMap.get(CRServo.class, "FrontLeftIntake");
         CRServo frontRightIntake = hardwareMap.get(CRServo.class, "FrontRightIntake");
-
         CRServo backLeftIntake = hardwareMap.get(CRServo.class, "BackLeftIntake");
         CRServo backRightIntake = hardwareMap.get(CRServo.class, "BackRightIntake");
+
+        frontRightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontIntake = new IntakeRollers(frontLeftIntake, frontRightIntake);
         backIntake = new IntakeRollers(backLeftIntake, backRightIntake);
 
         // Transfer
-        DcMotorEx transferLeft = hardwareMap.get(DcMotorEx.class, "TransferLeft");
-        DcMotorEx transferRight = hardwareMap.get(DcMotorEx.class, "TransferRight");
+        DcMotorEx transferFront = hardwareMap.get(DcMotorEx.class, "TransferFront");
+        DcMotorEx transferBack = hardwareMap.get(DcMotorEx.class, "TransferBack");
 
         // Reverse any motors and stuff here
-        transferLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        transferRight.setDirection(DcMotorEx.Direction.FORWARD);
-        transferLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        transferRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        transferLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        transferRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        transferFront.setDirection(DcMotorEx.Direction.FORWARD);
+        transferBack.setDirection(DcMotorEx.Direction.REVERSE);
+        transferFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        transferBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        transferFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        transferBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        transfer = new Transfer(transferLeft, transferRight);
+        transfer = new Transfer(transferFront, transferBack);
 
         // Turret
-        CRServo turretRight = hardwareMap.get(CRServo.class, "TurretRight");
-        CRServo turretLeft = hardwareMap.get(CRServo.class, "TurretLeft");
+        CRServo turretFront = hardwareMap.get(CRServo.class, "TurretFront");
+        CRServo turretBack = hardwareMap.get(CRServo.class, "TurretBack");
         Servo hood = hardwareMap.get(Servo.class, "Hood");
 
         DcMotorEx flyLeft = hardwareMap.get(DcMotorEx.class, "FlyLeft");
@@ -74,13 +79,15 @@ public class AlpineRobot extends Robot {
         flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Limelight init
+        /*
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(2);
         limelight.start();
+         */
 
         // Turret
-        turret = new Turret(turretRight, turretLeft, hood, flyLeft, flyRight);
-        turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
+        turret = new Turret(turretFront, turretBack, hood, flyLeft, flyRight);
+        //turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
 
         // Manual Bulk Caching
         setBulkReading(hardwareMap, LynxModule.BulkCachingMode.AUTO);

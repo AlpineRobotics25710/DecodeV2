@@ -6,8 +6,8 @@ public class TurretConstants {
 
     public static Pose GOAL_POSE = new Pose(0, 144);
 
-    public static double flywheelKP, flywheelKI, flywheelKD, flywheelKF;
-    public static double turretKP, turretKI, turretKD, turretKF;
+    public static double flywheelKP = 0.0, flywheelKI = 0.0, flywheelKD = 0.0, flywheelKF = 0.0;
+    public static double turretKP = 0.0, turretKI = 0.0, turretKD = 0.0, turretKF = 0.0;
 
     public static double TURRET_MAX_POWER = 0.85;
     public static double TURRET_TX_TOLERANCE_DEG = 1;

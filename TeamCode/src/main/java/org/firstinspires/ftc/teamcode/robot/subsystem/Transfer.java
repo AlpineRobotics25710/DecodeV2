@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.robot.constants.enums.TransferSide;
 
 public class Transfer extends SubsystemBase {
 
-    private final DcMotorEx left, right;
+    private final DcMotorEx front, back;
     private TransferSide currentPriority = TransferSide.BALANCED;
 
-    public Transfer(DcMotorEx left, DcMotorEx right) {
-        this.left = left;
-        this.right = right;
+    public Transfer(DcMotorEx front, DcMotorEx back) {
+        this.front = front;
+        this.back = back;
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
@@ -38,8 +38,8 @@ public class Transfer extends SubsystemBase {
 
     /** Run both transfer motors at full power */
     public void on() {
-        left.setPower(TransferConstants.ON);
-        right.setPower(TransferConstants.ON);
+        front.setPower(TransferConstants.ON);
+        back.setPower(TransferConstants.ON);
     }
 
     /** Run transfer with current side priority bias */
@@ -58,23 +58,39 @@ public class Transfer extends SubsystemBase {
         }
     }
 
-    /** Run transfer prioritizing left (front) side */
+    /** Run transfer prioritizing front (front) side */
     public void onLeftPriority() {
         setPower(TransferConstants.PRIMARY_SIDE_POWER, TransferConstants.SECONDARY_SIDE_POWER);
     }
 
-    /** Run transfer prioritizing right (back) side */
+    /** Run transfer prioritizing back (back) side */
     public void onRightPriority() {
         setPower(TransferConstants.SECONDARY_SIDE_POWER, TransferConstants.PRIMARY_SIDE_POWER);
     }
 
     public void off() {
-        left.setPower(TransferConstants.OFF);
-        right.setPower(TransferConstants.OFF);
+        front.setPower(TransferConstants.OFF);
+        back.setPower(TransferConstants.OFF);
     }
 
-    public void setPower(double leftPower, double rightPower) {
-        left.setPower(leftPower);
-        right.setPower(rightPower);
+    public void setFrontPower(double frontPower) {
+        front.setPower(frontPower);
+    }
+
+    public void setBackPower(double backPower) {
+        back.setPower(backPower);
+    }
+
+    public void setPower(double frontPower, double backPower) {
+        front.setPower(frontPower);
+        back.setPower(backPower);
+    }
+
+    public double getFrontPower() {
+        return front.getPower();
+    }
+
+    public double getBackPower() {
+        return back.getPower();
     }
 }

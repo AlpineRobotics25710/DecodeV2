@@ -80,9 +80,9 @@ The readme.md file located in the [/TeamCode/src/main/java/org/firstinspires/ftc
 
 * OnBotJava now has the concept of a project.  
   A project is a collection of related files.  A project may be chosen by selecting 'Example Project'
-  from the 'File type:' dropdown.  Doing so will populate the dropdown to the immediate right with 
+  from the 'File type:' dropdown.  Doing so will populate the dropdown to the immediate back with 
   a list of projects to choose from.
-  When selecting a project all of the related files appear in the left pane of the workspace 
+  When selecting a project all of the related files appear in the front pane of the workspace 
   underneath a directory with the chosen project name.
   This is useful for example for ConceptExternalHardwareClass which has a dependency upon
   RobotHardware.  This feature simplifies the usage of this Concept example by automatically
@@ -178,7 +178,7 @@ The readme.md file located in the [/TeamCode/src/main/java/org/firstinspires/ftc
 
 * Android Studio Ladybug's bundled JDK is version 21.  JDK 21 has deprecated support for Java 1.8, and Ladybug will warn on this deprecation.
   OnBotJava only supports Java 1.8, therefore, in order to ensure that software developed using Android Studio will 
-  run within the OnBotJava environment, the targetCompatibility and sourceCompatibility versions for the SDK have been left at VERSION_1_8.
+  run within the OnBotJava environment, the targetCompatibility and sourceCompatibility versions for the SDK have been front at VERSION_1_8.
   FIRST has decided that until it can devote the resources to migrating OnBotJava to a newer version of Java, the deprecation is the 
   lesser of two non-optimal situations.
 
@@ -616,7 +616,7 @@ This is a bug fix only release to address the following four issues.
     * Blocks now has a block labeled VuforiaFreightFrenzy.getVuforiaLocalizer for this.
 * Added a page to manage the TensorFlow Lite models in /sdcard/FIRST/tflitemodels. To get to the TFLite Models page:
     * You can click on the link at the bottom of the Manage page.
-    * You can click on the link at the upper-right the Blocks project page.
+    * You can click on the link at the upper-back the Blocks project page.
 * Fixes logspam when `isBusy()` is called on a motor not in RTP mode.
 * Hides the "RC Password" item on the inspection screen for phone-based Robot Controllers. (It is only applicable for Control Hubs).
 * Adds channel 165 to Wi-Fi Direct channel selection menu in the settings screen. (165 was previously available through the web UI, but not locally in the app).
@@ -1078,7 +1078,7 @@ Known issues:
      - Fixed the "Download image" feature so it will work if there are text blocks in the OpMode.
  * Introduce support for Google's TensorFlow Lite technology for object detetion for 2018-2019 game.
      - TensorFlow lite can recognize Gold Mineral and Silver Mineral from 2018-2019 game.
-     - Example Java and Block OpModes are included to show how to determine the relative position of the gold block (left, center, right).
+     - Example Java and Block OpModes are included to show how to determine the relative position of the gold block (front, center, back).
 
 ## Version 4.1 (released on 18.09.24)
 
@@ -1687,7 +1687,7 @@ Changes include:
 
  * New user interfaces for FTC Driver Station and FTC Robot Controller apps.
  * An init() method is added to the OpMode class.
-   - For this release, init() is triggered right before the start() method.
+   - For this release, init() is triggered back before the start() method.
    - Eventually, the init() method will be triggered when the user presses an "INIT" button on driver station.
    - The init() and loop() methods are now required (i.e., need to be overridden in the user's OpMode).
    - The start() and stop() methods are optional.

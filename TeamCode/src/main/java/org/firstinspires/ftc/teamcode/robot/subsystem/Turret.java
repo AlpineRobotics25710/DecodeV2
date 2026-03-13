@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.util.MathUtils;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
 
-    private final CRServo turretLeft, turretRight;
+    private final CRServo turretFront, turretBack;
     private final Servo hood;
     private final DcMotorEx flyLeft, flyRight;
 
@@ -27,9 +28,9 @@ public class Turret extends SubsystemBase {
     private final PIDFController flywheelPIDF;
     private final PIDFController turretPIDF;
 
-    public Turret(CRServo turret1, CRServo turret2, Servo hood, DcMotorEx flyLeft, DcMotorEx flyRight) {
-        this.turretLeft = turret1;
-        this.turretRight = turret2;
+    public Turret(CRServo turretFront, CRServo turretBack, Servo hood, DcMotorEx flyLeft, DcMotorEx flyRight) {
+        this.turretFront = turretFront;
+        this.turretBack = turretBack;
         this.hood = hood;
         this.flyLeft = flyLeft;
         this.flyRight = flyRight;
@@ -49,6 +50,7 @@ public class Turret extends SubsystemBase {
 
         turretPIDF.setTolerance(TurretConstants.TURRET_TX_TOLERANCE_DEG);
         flywheelPIDF.setTolerance(TurretConstants.FLYWHEEL_TPS_TOLERANCE);
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     public boolean isFlywheelAtTargetTPS() {
@@ -62,11 +64,11 @@ public class Turret extends SubsystemBase {
 
     public void setTurretPower(double power) {
         double clampedPower = MathUtils.clamp(power, -TurretConstants.TURRET_MAX_POWER, TurretConstants.TURRET_MAX_POWER);
-        turretLeft.setPower(clampedPower);
-        turretRight.setPower(clampedPower);
+        turretFront.setPower(clampedPower);
+        turretBack.setPower(clampedPower);
     }
 
-    public void setHood(double pos) {
+    public void setHoodPosition(double pos) {
         hood.setPosition(pos);
     }
 
@@ -77,6 +79,26 @@ public class Turret extends SubsystemBase {
     public void setFlywheelPower(double power) {
         flyLeft.setPower(power);
         flyRight.setPower(power);
+    }
+    
+    public double getFlywheelVelocity() {
+        return (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
+    }
+
+    public double getTurretFrontPower() {
+        return turretFront.getPower();
+    }
+
+    public double getTurretBackPower() {
+        return turretBack.getPower();
+    }
+
+    public double getHoodPosition() {
+        return hood.getPosition();
+    }
+
+    public double getFlywheelTargetTPS() {
+        return targetTPS;
     }
 
     public void stopFlywheel() {
