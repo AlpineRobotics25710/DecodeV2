@@ -34,8 +34,8 @@ public class AlpineRobot extends Robot {
         drivetrain = new Drivetrain(follower, true);
 
         // Intake + Transfer are now combined: one motor per side
-        DcMotor intakeFront = hardwareMap.get(DcMotor.class, "TransferFront");
-        DcMotor intakeBack = hardwareMap.get(DcMotor.class, "TransferBack");
+        DcMotor intakeFront = hardwareMap.get(DcMotor.class, "IntakeFront");
+        DcMotor intakeBack = hardwareMap.get(DcMotor.class, "IntakeBack");
 
         // Reverse any motors and stuff here
         intakeFront.setDirection(DcMotorSimple.Direction.FORWARD);
