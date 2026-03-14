@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
@@ -8,24 +8,32 @@ import org.firstinspires.ftc.teamcode.robot.constants.IntakeRollerConstants;
 
 public class IntakeRollers extends SubsystemBase {
 
-    private final CRServo left, right;
+    private final DcMotor front, back;
 
-    public IntakeRollers(CRServo left, CRServo right) {
-        this.left = left;
-        this.right = right;
+    public IntakeRollers(DcMotor front, DcMotor back) {
+        this.front = front;
+        this.back = back;
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
-    public void setPower(double power) {
-        left.setPower(power);
-        right.setPower(power);
+    public void stop() {
+        setPower(IntakeRollerConstants.OFF, IntakeRollerConstants.OFF);
     }
 
-    public void stop() {
-        setPower(IntakeRollerConstants.OFF);
-    }
-    
     public double getPower() {
-        return (left.getPower() + right.getPower()) / 2.0;
+        return (front.getPower() + back.getPower()) / 2.0;
+    }
+
+    public void setPower(double frontPower, double backPower) {
+        front.setPower(frontPower);
+        back.setPower(backPower);
+    }
+
+    public double getFrontPower() {
+        return front.getPower();
+    }
+
+    public double getBackPower() {
+        return back.getPower();
     }
 }

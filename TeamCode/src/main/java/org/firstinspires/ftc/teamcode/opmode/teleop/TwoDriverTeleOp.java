@@ -20,32 +20,17 @@ public class TwoDriverTeleOp extends BaseTeleOp {
     }
 
     @Override
-    public GamepadButton intakeButton() {
+    public GamepadButton frontIntakeButton() {
         return driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
     }
 
     @Override
-    public GamepadButton reverseIntakeButton() {
+    public GamepadButton backIntakeButton() {
         return driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
     }
 
     @Override
-    public GamepadButton shootButton() {
+    public GamepadButton flywheelToggle() {
         return driver2.getGamepadButton(GamepadKeys.Button.A);
-    }
-    
-    @Override
-    public GamepadButton frontSidePriorityButton() {
-        return driver2.getGamepadButton(GamepadKeys.Button.X);
-    }
-    
-    @Override
-    public GamepadButton backSidePriorityButton() {
-        return driver2.getGamepadButton(GamepadKeys.Button.B);
-    }
-    
-    @Override
-    public GamepadButton clearQueueButton() {
-        return driver2.getGamepadButton(GamepadKeys.Button.Y);
     }
 }

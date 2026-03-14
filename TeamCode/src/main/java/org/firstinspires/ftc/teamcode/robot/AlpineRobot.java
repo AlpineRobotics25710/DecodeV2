@@ -16,9 +16,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystem.*;
 public class AlpineRobot extends Robot {
 
     public final Drivetrain drivetrain;
-    public final IntakeRollers frontIntake;
-    public final IntakeRollers backIntake;
-    public final Transfer transfer;
+    public final IntakeRollers intake;
     public final Turret turret;
 
     //public final Limelight3A limelight;
@@ -35,33 +33,19 @@ public class AlpineRobot extends Robot {
         // Drivetrain
         drivetrain = new Drivetrain(follower, true);
 
-        // Intake
-        CRServo frontLeftIntake = hardwareMap.get(CRServo.class, "FrontLeftIntake");
-        CRServo frontRightIntake = hardwareMap.get(CRServo.class, "FrontRightIntake");
-        CRServo backLeftIntake = hardwareMap.get(CRServo.class, "BackLeftIntake");
-        CRServo backRightIntake = hardwareMap.get(CRServo.class, "BackRightIntake");
-
-        frontRightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        frontIntake = new IntakeRollers(frontLeftIntake, frontRightIntake);
-        backIntake = new IntakeRollers(backLeftIntake, backRightIntake);
-
-        // Transfer
-        DcMotorEx transferFront = hardwareMap.get(DcMotorEx.class, "TransferFront");
-        DcMotorEx transferBack = hardwareMap.get(DcMotorEx.class, "TransferBack");
+        // Intake + Transfer are now combined: one motor per side
+        DcMotor intakeFront = hardwareMap.get(DcMotor.class, "TransferFront");
+        DcMotor intakeBack = hardwareMap.get(DcMotor.class, "TransferBack");
 
         // Reverse any motors and stuff here
-        transferFront.setDirection(DcMotorEx.Direction.FORWARD);
-        transferBack.setDirection(DcMotorEx.Direction.REVERSE);
-        transferFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        transferBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        transferFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        transferBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        intakeFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        intakeBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        transfer = new Transfer(transferFront, transferBack);
+        intake = new IntakeRollers(intakeFront, intakeBack);
 
         // Turret
         CRServo turretFront = hardwareMap.get(CRServo.class, "TurretFront");
@@ -74,9 +58,10 @@ public class AlpineRobot extends Robot {
         // Reverse any motors and stuff here
         flyRight.setDirection(DcMotorEx.Direction.REVERSE);
         flyLeft.setDirection(DcMotorEx.Direction.FORWARD);
-
         flyRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        turret = new Turret(turretFront, turretBack, hood, flyLeft, flyRight);
 
         // Limelight init
         /*
@@ -84,9 +69,6 @@ public class AlpineRobot extends Robot {
         limelight.pipelineSwitch(2);
         limelight.start();
          */
-
-        // Turret
-        turret = new Turret(turretFront, turretBack, hood, flyLeft, flyRight);
         //turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
 
         // Manual Bulk Caching

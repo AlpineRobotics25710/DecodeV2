@@ -14,7 +14,7 @@ public class TurretConstants {
     public static double TURRET_RECOVERY_POWER = 0.2; // slow creep to re-acquire tag
 
     // Flywheel velocity tolerance (ticks per second) to consider "at speed"
-    public static double FLYWHEEL_TPS_TOLERANCE = 50; // TODO: tune
+    public static double FLYWHEEL_TPS_TOLERANCE = 20; // TODO: tune
 
     // How long (seconds) to run the transfer motors to fire one ball
     public static double SHOOT_DURATION_SECONDS = 0.5; // TODO: tune

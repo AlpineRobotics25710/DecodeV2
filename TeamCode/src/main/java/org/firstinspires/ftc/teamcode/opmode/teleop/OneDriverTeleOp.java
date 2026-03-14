@@ -19,32 +19,17 @@ public class OneDriverTeleOp extends BaseTeleOp {
     }
 
     @Override
-    public GamepadButton intakeButton() {
+    public GamepadButton frontIntakeButton() {
         return driver1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
     }
 
     @Override
-    public GamepadButton reverseIntakeButton() {
+    public GamepadButton backIntakeButton() {
         return driver1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
     }
 
     @Override
-    public GamepadButton shootButton() {
+    public GamepadButton flywheelToggle() {
         return driver1.getGamepadButton(GamepadKeys.Button.A);
-    }
-    
-    @Override
-    public GamepadButton frontSidePriorityButton() {
-        return driver1.getGamepadButton(GamepadKeys.Button.X);
-    }
-    
-    @Override
-    public GamepadButton backSidePriorityButton() {
-        return driver1.getGamepadButton(GamepadKeys.Button.B);
-    }
-    
-    @Override
-    public GamepadButton clearQueueButton() {
-        return driver1.getGamepadButton(GamepadKeys.Button.Y);
     }
 }

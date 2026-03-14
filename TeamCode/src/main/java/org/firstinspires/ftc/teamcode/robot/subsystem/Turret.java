@@ -80,6 +80,10 @@ public class Turret extends SubsystemBase {
         flyLeft.setPower(power);
         flyRight.setPower(power);
     }
+
+    public boolean isFlywheelOn() {
+        return targetTPS != 0;
+    }
     
     public double getFlywheelVelocity() {
         return (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
