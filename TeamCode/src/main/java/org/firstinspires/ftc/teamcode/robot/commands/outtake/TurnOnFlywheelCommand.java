@@ -28,6 +28,11 @@ public class TurnOnFlywheelCommand extends CommandBase {
         updateFlywheelAndHood();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        turret.stopFlywheel();
+    }
+
     private void updateFlywheelAndHood() {
         double dist = distanceSupplier.getAsDouble();
         turret.setHoodPosition(Interpolator.getHoodPos(dist));

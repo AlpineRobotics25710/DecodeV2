@@ -10,11 +10,11 @@ import java.util.function.BooleanSupplier;
 public class FrontIntakeCommand extends CommandBase {
 
     private final IntakeRollers intake;
-    private final BooleanSupplier flywheelOnSupplier;
+    private final BooleanSupplier flywheelReachedSpeedSupplier;
 
-    public FrontIntakeCommand(IntakeRollers intake, BooleanSupplier flywheelOnSupplier) {
+    public FrontIntakeCommand(IntakeRollers intake, BooleanSupplier flywheelReachedSpeedSupplier) {
         this.intake = intake;
-        this.flywheelOnSupplier = flywheelOnSupplier;
+        this.flywheelReachedSpeedSupplier = flywheelReachedSpeedSupplier;
         addRequirements(intake);
     }
 
@@ -29,7 +29,7 @@ public class FrontIntakeCommand extends CommandBase {
     }
 
     private void applyPower() {
-        if (!flywheelOnSupplier.getAsBoolean()) {
+        if (!flywheelReachedSpeedSupplier.getAsBoolean()) {
             intake.setPower(IntakeRollerConstants.INTAKE_POWER, IntakeRollerConstants.OFF);
         } else {
             intake.setPower(IntakeRollerConstants.INTAKE_POWER, IntakeRollerConstants.HELP_POWER);
