@@ -7,6 +7,8 @@ import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
+import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
+import org.firstinspires.ftc.teamcode.robot.Interpolator;
 import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.BackIntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.FrontIntakeCommand;
@@ -50,6 +52,14 @@ public abstract class BaseTeleOp extends CommandOpMode {
         super.run();
 
         // Display telemetry for driver awareness
-
+        CommonTelemetry.addData("Distance from goal", robot.getDistanceFromGoal());
+        CommonTelemetry.addData("target flywheel tps", robot.turret.getFlywheelTargetTPS());
+        CommonTelemetry.addData("actual flywheel tps", robot.turret.getFlywheelVelocity());
+        CommonTelemetry.addData("interpolated hood pos", Interpolator.getHoodPos(robot.getDistanceFromGoal()));
+        CommonTelemetry.addData("interpolated flywheel tps", Interpolator.getFlywheelTPS(robot.getDistanceFromGoal()));
+        CommonTelemetry.addData("hood pos", robot.turret.getHoodPosition());
+        CommonTelemetry.addData("front intake power", robot.intake.getFrontPower());
+        CommonTelemetry.addData("back intake power", robot.intake.getBackPower());
+        CommonTelemetry.update();
     }
 }
