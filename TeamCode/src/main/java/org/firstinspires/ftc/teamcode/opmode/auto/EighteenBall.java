@@ -48,7 +48,7 @@ public class EighteenBall extends PedroAutoBase {
     protected void buildPaths() {
 
         // Path 1
-        PathChain path1 = follower.pathBuilder()
+        PathChain start = follower.pathBuilder()
                 .addPath(new BezierLine(
                         poses.startPose,
                         poses.scorePose))
@@ -56,7 +56,7 @@ public class EighteenBall extends PedroAutoBase {
                         poses.startPose.getHeading(),
                         poses.scorePose.getHeading())
                 .build();
-        addPath(path1);
+        addPath(start);
 
         // Path 2
         PathChain path2 = follower.pathBuilder()
@@ -163,22 +163,22 @@ public class EighteenBall extends PedroAutoBase {
         PathChain path11 = follower.pathBuilder()
                 .addPath(new BezierLine(
                         poses.scorePose,
-                        poses.midPickupPose))
-                .setConstantHeadingInterpolation(poses.midPickupPose.getHeading())
+                        poses.topPickupPose))
+                .setConstantHeadingInterpolation(poses.topPickupPose.getHeading())
                 .build();
         addPath(path11);
 
         // Path 12
         PathChain path12 = follower.pathBuilder()
                 .addPath(new BezierLine(
-                        poses.midPickupPose,
+                        poses.topPickupPose,
                         poses.scorePose))
                 .setConstantHeadingInterpolation(poses.scorePose.getHeading())
                 .build();
         addPath(path12);
 
         // Path 13
-        PathChain path13 = follower.pathBuilder()
+        PathChain park = follower.pathBuilder()
                 .addPath(new BezierLine(
                         poses.scorePose,
                         poses.parkPose))
@@ -186,7 +186,7 @@ public class EighteenBall extends PedroAutoBase {
                         poses.scorePose.getHeading(),
                         poses.parkPose.getHeading())
                 .build();
-        addPath(path13);
+        addPath(park);
     }
 }
 

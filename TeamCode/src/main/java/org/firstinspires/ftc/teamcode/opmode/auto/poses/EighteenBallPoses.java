@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.robot.constants.enums.Alliance;
         public Pose sample1Pose;
         public Pose sample2Pose;
         public Pose intakePose;
-        public Pose midPickupPose;
+        public Pose topPickupPose;
         public Pose parkPose;
 
 
@@ -39,10 +39,10 @@ import org.firstinspires.ftc.teamcode.robot.constants.enums.Alliance;
             sample1Pose = new Pose(40.5, 59.6, Math.toRadians(180));
             sample2Pose = new Pose(18.6, 59.0, Math.toRadians(180));
             intakePose = new Pose(11.2, 60.6, Math.toRadians(130));
-            midPickupPose = new Pose(19.5, 83.6, Math.toRadians(180));
+            topPickupPose = new Pose(19.5, 83.6, Math.toRadians(180));
             parkPose = new Pose(44.8, 80.0, Math.toRadians(180));
 
-            // Control points (heading unused — supply only x, y)
+            // Control points (heading unused - supply only x, y)
             cpPath2 = new Pose(62.008, 75.622);
             cpPath4 = new Pose(54.888, 57.412);
             cpPath5 = new Pose(49.7, 52.4);
@@ -60,7 +60,7 @@ import org.firstinspires.ftc.teamcode.robot.constants.enums.Alliance;
             sample1Pose = sample1Pose.mirror();
             sample2Pose = sample2Pose.mirror();
             intakePose = intakePose.mirror();
-            midPickupPose = midPickupPose.mirror();
+            topPickupPose = topPickupPose.mirror();
             parkPose = parkPose.mirror();
 
             cpPath2 = cpPath2.mirror();
