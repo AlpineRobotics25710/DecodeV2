@@ -12,9 +12,9 @@ public class FrontIntakeCommand extends CommandBase {
     private final IntakeRollers intake;
     private final BooleanSupplier flywheelOnSupplier;
 
-    public FrontIntakeCommand(IntakeRollers intake, BooleanSupplier flywheelOnSupplier) {
+    public FrontIntakeCommand(IntakeRollers intake, BooleanSupplier shootSupplier) {
         this.intake = intake;
-        this.flywheelOnSupplier = flywheelOnSupplier;
+        this.flywheelOnSupplier = shootSupplier;
         addRequirements(intake);
     }
 
