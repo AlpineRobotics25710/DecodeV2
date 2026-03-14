@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -16,17 +15,15 @@ public class Turret extends SubsystemBase {
     private final CRServo turretFront, turretBack;
     private final Servo hood;
     private final DcMotorEx flyLeft, flyRight;
-
-    private double targetTPS = 0;
+    private final PIDFController flywheelPIDF;
+    private final PIDFController turretPIDF;
+    private double targetTPS = TurretConstants.FLYWHEEL_IDLE_TPS;
+    private boolean shootingTargetActive = false;
     private double alignmentErrorDeg = 0;
     private boolean hasAlignmentTarget = false;
-
     // Recovery: when tag is lost, creep back in the last known error direction
     private double lastKnownErrorSign = 0;  // +1, -1, or 0 (unknown)
     private boolean inRecovery = false;
-
-    private final PIDFController flywheelPIDF;
-    private final PIDFController turretPIDF;
 
     public Turret(CRServo turretFront, CRServo turretBack, Servo hood, DcMotorEx flyLeft, DcMotorEx flyRight) {
         this.turretFront = turretFront;
@@ -54,8 +51,7 @@ public class Turret extends SubsystemBase {
     }
 
     public boolean isFlywheelAtTargetTPS() {
-        if (targetTPS == 0) return false;
-        return flywheelPIDF.atSetPoint();
+        return shootingTargetActive && flywheelPIDF.atSetPoint();
     }
 
     public boolean isTurretAligned() {
@@ -68,23 +64,15 @@ public class Turret extends SubsystemBase {
         turretBack.setPower(clampedPower);
     }
 
-    public void setHoodPosition(double pos) {
-        hood.setPosition(pos);
-    }
-
-    public void setFlywheelTargetTPS(double tps) {
-        targetTPS = tps;
-    }
-
     public void setFlywheelPower(double power) {
         flyLeft.setPower(power);
         flyRight.setPower(power);
     }
 
     public boolean isFlywheelOn() {
-        return targetTPS != 0;
+        return shootingTargetActive;
     }
-    
+
     public double getFlywheelVelocity() {
         return (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
     }
@@ -101,14 +89,40 @@ public class Turret extends SubsystemBase {
         return hood.getPosition();
     }
 
+    public void setHoodPosition(double pos) {
+        hood.setPosition(pos);
+    }
+
     public double getFlywheelTargetTPS() {
         return targetTPS;
     }
 
+    public void setFlywheelTargetTPS(double tps) {
+        if (tps <= 0) {
+            if (shootingTargetActive) {
+                stopFlywheel();
+            } else {
+                targetTPS = TurretConstants.FLYWHEEL_IDLE_TPS;
+            }
+            return;
+        }
+
+        if (!shootingTargetActive) {
+            flywheelPIDF.reset();
+            flywheelPIDF.clearTotalError();
+        }
+
+        targetTPS = tps;
+        shootingTargetActive = true;
+    }
+
     public void stopFlywheel() {
-        targetTPS = 0;
-        flyLeft.setPower(0);
-        flyRight.setPower(0);
+        if (!shootingTargetActive && targetTPS == TurretConstants.FLYWHEEL_IDLE_TPS) {
+            return;
+        }
+
+        shootingTargetActive = false;
+        targetTPS = TurretConstants.FLYWHEEL_IDLE_TPS;
         flywheelPIDF.reset();
         flywheelPIDF.clearTotalError();
     }
@@ -123,7 +137,9 @@ public class Turret extends SubsystemBase {
         }
     }
 
-    /** Called by AlignTurretToGoalCommand when the tag drops out of view. Enters recovery creep. */
+    /**
+     * Called by AlignTurretToGoalCommand when the tag drops out of view. Enters recovery creep.
+     */
     public void onTagLost() {
         hasAlignmentTarget = false;
         alignmentErrorDeg = 0;
@@ -132,7 +148,9 @@ public class Turret extends SubsystemBase {
         inRecovery = (lastKnownErrorSign != 0);
     }
 
-    /** Hard stop – call when you want to completely abandon turret alignment. */
+    /**
+     * Hard stop – call when you want to completely abandon turret alignment.
+     */
     public void clearTurretAlignment() {
         hasAlignmentTarget = false;
         alignmentErrorDeg = 0;
