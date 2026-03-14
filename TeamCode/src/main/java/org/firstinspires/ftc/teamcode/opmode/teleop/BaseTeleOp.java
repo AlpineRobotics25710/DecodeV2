@@ -37,13 +37,15 @@ public abstract class BaseTeleOp extends CommandOpMode {
         robot = new AlpineRobot(hardwareMap);
         robot.drivetrain.setDefaultCommand(new PedroTeleOpDriveCommand(robot.drivetrain, driver()));
 
-        frontIntakeButton().whenHeld(new FrontIntakeCommand(robot.intake, () -> robot.turret.isFlywheelAtTargetTPS()));
-        backIntakeButton().whenHeld(new BackIntakeCommand(robot.intake, () -> robot.turret.isFlywheelAtTargetTPS()));
+        // Only "shoot" (HELP_POWER) if we are in shooting mode AND at target speed
+        frontIntakeButton().whenHeld(new FrontIntakeCommand(robot.intake, () -> robot.turret.isShootingMode() && robot.turret.isFlywheelAtTargetTPS()));
+        backIntakeButton().whenHeld(new BackIntakeCommand(robot.intake, () -> robot.turret.isShootingMode() && robot.turret.isFlywheelAtTargetTPS()));
 
+        // Toggle between active shooting and idle
         flywheelToggle().whenPressed(new ConditionalCommand(
-                new InstantCommand(() -> robot.turret.stopFlywheel(), robot.turret),
+                new InstantCommand(() -> robot.turret.idleFlywheel(), robot.turret),
                 new TurnOnFlywheelCommand(robot.turret, () -> robot.getDistanceFromGoal()),
-                () -> robot.turret.isFlywheelOn()
+                () -> robot.turret.isShootingMode()
         ));
     }
 
@@ -55,6 +57,7 @@ public abstract class BaseTeleOp extends CommandOpMode {
         CommonTelemetry.addData("Distance from goal", robot.getDistanceFromGoal());
         CommonTelemetry.addData("target flywheel tps", robot.turret.getFlywheelTargetTPS());
         CommonTelemetry.addData("actual flywheel tps", robot.turret.getFlywheelVelocity());
+        CommonTelemetry.addData("is shooting mode", robot.turret.isShootingMode());
         CommonTelemetry.addData("interpolated hood pos", Interpolator.getHoodPos(robot.getDistanceFromGoal()));
         CommonTelemetry.addData("interpolated flywheel tps", Interpolator.getFlywheelTPS(robot.getDistanceFromGoal()));
         CommonTelemetry.addData("hood pos", robot.turret.getHoodPosition());

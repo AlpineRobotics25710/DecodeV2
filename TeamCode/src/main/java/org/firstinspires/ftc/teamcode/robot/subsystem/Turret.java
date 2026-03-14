@@ -17,7 +17,7 @@ public class Turret extends SubsystemBase {
     private final Servo hood;
     private final DcMotorEx flyLeft, flyRight;
 
-    private double targetTPS = 0;
+    private double targetTPS = TurretConstants.FLYWHEEL_IDLE_TPS;
     private double alignmentErrorDeg = 0;
     private boolean hasAlignmentTarget = false;
 
@@ -54,7 +54,6 @@ public class Turret extends SubsystemBase {
     }
 
     public boolean isFlywheelAtTargetTPS() {
-        if (targetTPS == 0) return false;
         return flywheelPIDF.atSetPoint();
     }
 
@@ -81,8 +80,11 @@ public class Turret extends SubsystemBase {
         flyRight.setPower(power);
     }
 
-    public boolean isFlywheelOn() {
-        return targetTPS != 0;
+    /**
+     * Returns true if the flywheel is in "Shooting Mode" (target is higher than idle).
+     */
+    public boolean isShootingMode() {
+        return targetTPS != TurretConstants.FLYWHEEL_IDLE_TPS;
     }
     
     public double getFlywheelVelocity() {
@@ -105,7 +107,11 @@ public class Turret extends SubsystemBase {
         return targetTPS;
     }
 
-    public void stopFlywheel() {
+    public void idleFlywheel() {
+        targetTPS = TurretConstants.FLYWHEEL_IDLE_TPS;
+    }
+
+    public void stopFlywheelCompletely() {
         targetTPS = 0;
         flyLeft.setPower(0);
         flyRight.setPower(0);

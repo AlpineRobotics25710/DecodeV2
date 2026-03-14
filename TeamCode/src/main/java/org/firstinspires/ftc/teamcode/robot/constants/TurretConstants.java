@@ -16,6 +16,8 @@ public class TurretConstants {
     // Flywheel velocity tolerance (ticks per second) to consider "at speed"
     public static double FLYWHEEL_TPS_TOLERANCE = 20; // TODO: tune
 
+    public static double FLYWHEEL_IDLE_TPS = 500; // TODO: tune
+
     // How long (seconds) to run the transfer motors to fire one ball
     public static double SHOOT_DURATION_SECONDS = 0.5; // TODO: tune
 
