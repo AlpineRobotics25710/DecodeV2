@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.robot.subsystem;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
 
-    private final CRServo turretFront, turretBack;
+    private final Servo turret;
     private final DcMotorEx flyLeft, flyRight;
     private final PIDFController flywheelPIDF;
     private final PIDFController turretPIDF;
@@ -20,13 +19,13 @@ public class Turret extends SubsystemBase {
     private boolean shootingTargetActive = false;
     private double alignmentErrorDeg = 0;
     private boolean hasAlignmentTarget = false;
+    private double commandedTurretAngleDeg = 0;
     // Recovery: when tag is lost, creep back in the last known error direction
     private double lastKnownErrorSign = 0;  // +1, -1, or 0 (unknown)
     private boolean inRecovery = false;
 
-    public Turret(CRServo turretFront, CRServo turretBack, DcMotorEx flyLeft, DcMotorEx flyRight) {
-        this.turretFront = turretFront;
-        this.turretBack = turretBack;
+    public Turret(Servo turret, DcMotorEx flyLeft, DcMotorEx flyRight) {
+        this.turret = turret;
         this.flyLeft = flyLeft;
         this.flyRight = flyRight;
 
@@ -45,6 +44,10 @@ public class Turret extends SubsystemBase {
 
         turretPIDF.setTolerance(TurretConstants.TURRET_TX_TOLERANCE_DEG);
         flywheelPIDF.setTolerance(TurretConstants.FLYWHEEL_TPS_TOLERANCE);
+
+        // Initialize from the configured servo position and clamp to the allowed turret range.
+        commandedTurretAngleDeg = clampTurretAngle(servoPositionToTurretAngle(turret.getPosition()));
+        applyTurretAngle(commandedTurretAngleDeg);
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
@@ -54,12 +57,6 @@ public class Turret extends SubsystemBase {
 
     public boolean isTurretAligned() {
         return hasAlignmentTarget && turretPIDF.atSetPoint();
-    }
-
-    public void setTurretPower(double power) {
-        double clampedPower = MathUtils.clamp(power, -TurretConstants.TURRET_MAX_POWER, TurretConstants.TURRET_MAX_POWER);
-        turretFront.setPower(clampedPower);
-        turretBack.setPower(clampedPower);
     }
 
     public void setFlywheelPower(double power) {
@@ -75,12 +72,12 @@ public class Turret extends SubsystemBase {
         return (flyLeft.getVelocity() + flyRight.getVelocity()) / 2.0;
     }
 
-    public double getTurretFrontPower() {
-        return turretFront.getPower();
+    public double getTurretServoPosition() {
+        return turret.getPosition();
     }
 
-    public double getTurretBackPower() {
-        return turretBack.getPower();
+    public double getTurretAngleDeg() {
+        return commandedTurretAngleDeg;
     }
 
     public double getFlywheelTargetTPS() {
@@ -148,7 +145,45 @@ public class Turret extends SubsystemBase {
         lastKnownErrorSign = 0;
         turretPIDF.reset();
         turretPIDF.clearTotalError();
-        setTurretPower(0);
+    }
+
+    public void setTurretAngleDeg(double targetAngleDeg) {
+        hasAlignmentTarget = false;
+        inRecovery = false;
+        turretPIDF.reset();
+        turretPIDF.clearTotalError();
+        commandedTurretAngleDeg = clampTurretAngle(targetAngleDeg);
+        applyTurretAngle(commandedTurretAngleDeg);
+    }
+
+    private void nudgeTurretAngleDeg(double deltaDeg) {
+        commandedTurretAngleDeg = clampTurretAngle(commandedTurretAngleDeg + deltaDeg);
+        applyTurretAngle(commandedTurretAngleDeg);
+    }
+
+    private double getTurretAbsLimitDeg() {
+        return Math.min(TurretConstants.TURRET_SOFT_LIMIT_DEG, TurretConstants.TURRET_PHYSICAL_LIMIT_DEG);
+    }
+
+    private double clampTurretAngle(double turretAngleDeg) {
+        double limit = getTurretAbsLimitDeg();
+        return MathUtils.clamp(turretAngleDeg, -limit, limit);
+    }
+
+    private double turretAngleToServoPosition(double turretAngleDeg) {
+        double servoDeg = TurretConstants.TURRET_SERVO_CENTER_DEG
+                + (turretAngleDeg * TurretConstants.TURRET_SERVO_DEG_PER_TURRET_DEG);
+        return MathUtils.clamp(servoDeg / TurretConstants.TURRET_SERVO_MAX_DEG, 0, 1);
+    }
+
+    private double servoPositionToTurretAngle(double servoPosition) {
+        double servoDeg = MathUtils.clamp(servoPosition, 0, 1) * TurretConstants.TURRET_SERVO_MAX_DEG;
+        return (servoDeg - TurretConstants.TURRET_SERVO_CENTER_DEG)
+                / TurretConstants.TURRET_SERVO_DEG_PER_TURRET_DEG;
+    }
+
+    private void applyTurretAngle(double turretAngleDeg) {
+        turret.setPosition(turretAngleToServoPosition(turretAngleDeg));
     }
 
     @Override
@@ -160,19 +195,22 @@ public class Turret extends SubsystemBase {
 
         if (!hasAlignmentTarget) {
             if (inRecovery && lastKnownErrorSign != 0) {
-                // Creep back in the direction the tag was last seen
-                setTurretPower(lastKnownErrorSign * TurretConstants.TURRET_RECOVERY_POWER);
-            } else {
-                setTurretPower(0);
+                // Creep a fixed angle step back toward where the tag was last seen.
+                nudgeTurretAngleDeg(lastKnownErrorSign * TurretConstants.TURRET_RECOVERY_STEP_DEG);
             }
             return;
         }
 
-        double turretOutput = turretPIDF.calculate(alignmentErrorDeg, 0);
-        if (Math.abs(alignmentErrorDeg) <= TurretConstants.TURRET_TX_TOLERANCE_DEG) {
-            turretOutput = 0;
+        double turretStepDeg = turretPIDF.calculate(alignmentErrorDeg, 0);
+        turretStepDeg = MathUtils.clamp(
+                turretStepDeg,
+                -TurretConstants.TURRET_MAX_PID_STEP_DEG,
+                TurretConstants.TURRET_MAX_PID_STEP_DEG
+        );
+        if (Math.abs(alignmentErrorDeg) <= TurretConstants.TURRET_TX_TOLERANCE_DEG || turretPIDF.atSetPoint()) {
+            turretStepDeg = 0;
         }
 
-        setTurretPower(turretOutput);
+        nudgeTurretAngleDeg(turretStepDeg);
     }
 }

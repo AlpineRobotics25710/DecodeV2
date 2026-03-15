@@ -9,9 +9,20 @@ public class TurretConstants {
     public static double flywheelKP = 0.0, flywheelKI = 0.0, flywheelKD = 0.0, flywheelKF = 0.0;
     public static double turretKP = 0.0, turretKI = 0.0, turretKD = 0.0, turretKF = 0.0;
 
-    public static double TURRET_MAX_POWER = 0.85;
     public static double TURRET_TX_TOLERANCE_DEG = 1;
-    public static double TURRET_RECOVERY_POWER = 0.2; // slow creep to re-acquire tag
+
+    // Single-servo turret geometry
+    public static double TURRET_SOFT_LIMIT_DEG = 90; // left/right cap requested
+    public static double TURRET_TO_SERVO_GEAR_RATIO = 4.0; // turret:servo is 4:1 (servo spins 4x)
+    public static double TURRET_SERVO_MAX_DEG = 810;
+    public static double TURRET_SERVO_CENTER_DEG = TURRET_SERVO_MAX_DEG / 2.0;
+    public static double TURRET_SERVO_DEG_PER_TURRET_DEG = TURRET_TO_SERVO_GEAR_RATIO;
+    public static double TURRET_PHYSICAL_LIMIT_DEG =
+            (TURRET_SERVO_MAX_DEG / 2.0) / TURRET_SERVO_DEG_PER_TURRET_DEG;
+
+    // Positional-servo alignment tuning (degrees per scheduler cycle)
+    public static double TURRET_MAX_PID_STEP_DEG = 4.0; // TODO: tune
+    public static double TURRET_RECOVERY_STEP_DEG = 1.0; // TODO: tune
 
     // Flywheel velocity tolerance (ticks per second) to consider "at speed"
     public static double FLYWHEEL_TPS_TOLERANCE = 20; // TODO: tune
