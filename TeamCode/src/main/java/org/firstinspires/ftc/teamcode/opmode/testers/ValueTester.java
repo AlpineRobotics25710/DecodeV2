@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
 @Configurable
 public class ValueTester extends LinearOpMode {
     public static double flywheelTargetTPS = 0.0;
-    public static double turretAngleDeg = 0.0;
+    public static double turretServoPos = 0.5;
     public static double frontIntakePower = 0.0;
     public static double backIntakePower = 0.0;
 
@@ -28,7 +28,7 @@ public class ValueTester extends LinearOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
             robot.turret.setFlywheelTargetTPS(flywheelTargetTPS);
-            robot.turret.setTurretAngleDeg(turretAngleDeg);
+            robot.turret.setTurretServoPosition(turretServoPos);
 
             robot.intake.setPower(frontIntakePower, backIntakePower);
 
@@ -43,9 +43,9 @@ public class ValueTester extends LinearOpMode {
             CommonTelemetry.addData("Flywheel avg velocity", robot.turret.getFlywheelVelocity());
 
             CommonTelemetry.addData("=== TURRET ===", "");
-            CommonTelemetry.addData("Turret angle (set)", turretAngleDeg);
-            CommonTelemetry.addData("Turret angle deg", robot.turret.getTurretAngleDeg());
-            CommonTelemetry.addData("Turret servo position", robot.turret.getTurretServoPosition());
+            CommonTelemetry.addData("Turret servo pos (set)", turretServoPos);
+            CommonTelemetry.addData("Turret servo pos (cmd)", robot.turret.getCommandedTurretServoPosition());
+            CommonTelemetry.addData("Turret servo pos (actual)", robot.turret.getTurretServoPosition());
 
             CommonTelemetry.update();
             CommandScheduler.getInstance().run();

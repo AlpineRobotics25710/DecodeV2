@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
 import org.firstinspires.ftc.teamcode.robot.Interpolator;
 import org.firstinspires.ftc.teamcode.robot.commands.drive.GmzTeleOpDriveCommand;
-import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.BackIntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.FrontIntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.outtake.TurnOnFlywheelCommand;
@@ -62,8 +61,8 @@ public abstract class BaseTeleOp extends CommandOpMode {
         CommonTelemetry.addData("target flywheel tps", robot.turret.getFlywheelTargetTPS());
         CommonTelemetry.addData("actual flywheel tps", robot.turret.getFlywheelVelocity());
         CommonTelemetry.addData("interpolated flywheel tps", Interpolator.getFlywheelTPS(robot.getDistanceFromGoal()));
-        CommonTelemetry.addData("turret angle deg", robot.turret.getTurretAngleDeg());
-        CommonTelemetry.addData("turret servo pos", robot.turret.getTurretServoPosition());
+        CommonTelemetry.addData("turret servo pos (cmd)", robot.turret.getCommandedTurretServoPosition());
+        CommonTelemetry.addData("turret servo pos (actual)", robot.turret.getTurretServoPosition());
         CommonTelemetry.addData("front intake power", robot.intake.getFrontPower());
         CommonTelemetry.addData("back intake power", robot.intake.getBackPower());
         CommonTelemetry.update();
