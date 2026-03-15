@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.pedropathing.follower.Follower;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.*;
-import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -19,8 +18,8 @@ public class AlpineRobot extends Robot {
     public final IntakeRollers intake;
     public final Turret turret;
 
-    //public final Limelight3A limelight;
     public final Follower follower;
+    private final Pose goalPose;
 
     /** Default to blue alliance **/
     public AlpineRobot(HardwareMap hardwareMap) {
@@ -29,6 +28,7 @@ public class AlpineRobot extends Robot {
 
     public AlpineRobot(HardwareMap hardwareMap, Alliance alliance) {
         follower = Constants.createFollower(hardwareMap);
+        goalPose = alliance == Alliance.BLUE ? TurretConstants.BLUE_GOAL_POSE : TurretConstants.RED_GOAL_POSE;
 
         // Drivetrain
         drivetrain = new Drivetrain(follower, true);
@@ -56,24 +56,17 @@ public class AlpineRobot extends Robot {
         // Reverse any motors and stuff here
         flyRight.setDirection(DcMotorEx.Direction.REVERSE);
         flyLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        flyRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flyRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flyLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turret = new Turret(turretServo, flyLeft, flyRight);
-
-        // Limelight init
-        /*
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(2);
-        limelight.start();
-         */
-        //turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, limelight, follower, alliance));
+        //turret.setDefaultCommand(new AlignTurretToGoalCommand(turret, follower, alliance));
 
         // Manual Bulk Caching
         setBulkReading(hardwareMap, LynxModule.BulkCachingMode.AUTO);
     }
 
     public double getDistanceFromGoal() {
-        return follower.getPose().distanceFrom(TurretConstants.GOAL_POSE);
+        return follower.getPose().distanceFrom(goalPose);
     }
 }

@@ -61,8 +61,6 @@ public abstract class BaseTeleOp extends CommandOpMode {
         CommonTelemetry.addData("target flywheel tps", robot.turret.getFlywheelTargetTPS());
         CommonTelemetry.addData("actual flywheel tps", robot.turret.getFlywheelVelocity());
         CommonTelemetry.addData("interpolated flywheel tps", Interpolator.getFlywheelTPS(robot.getDistanceFromGoal()));
-        CommonTelemetry.addData("turret servo pos (cmd)", robot.turret.getCommandedTurretServoPosition());
-        CommonTelemetry.addData("turret servo pos (actual)", robot.turret.getTurretServoPosition());
         CommonTelemetry.addData("front intake power", robot.intake.getFrontPower());
         CommonTelemetry.addData("back intake power", robot.intake.getBackPower());
         CommonTelemetry.update();

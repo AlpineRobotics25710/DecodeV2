@@ -4,44 +4,25 @@ import com.pedropathing.geometry.Pose;
 
 public class TurretConstants {
 
-    public static Pose GOAL_POSE = new Pose(0, 144);
+    public static Pose BLUE_GOAL_POSE = new Pose(0, 144);
+    public static Pose RED_GOAL_POSE = new Pose(144, 0);
+    public static Pose GOAL_POSE = BLUE_GOAL_POSE;
 
-    public static double flywheelKP = 0.0, flywheelKI = 0.0, flywheelKD = 0.0, flywheelKF = 0.0;
-    public static double turretKP = 0.0, turretKI = 0.0, turretKD = 0.0, turretKF = 0.0;
+    public static double flywheelKP = 0.0, flywheelKI = 0.0, flywheelKD = 0.0, flywheelKF = 0.0; // MANUAL: tune on robot
+    public static double turretKP = 0.0, turretKI = 0.0, turretKD = 0.0, turretKF = 0.0; // MANUAL: tune on robot
 
-    public static double TURRET_TX_TOLERANCE_DEG = 1;
+    public static double TURRET_TX_TOLERANCE_DEG = 1; // MANUAL: tune on robot
+    public static double TURRET_ALIGNMENT_DEADBAND_RAD = Math.toRadians(TURRET_TX_TOLERANCE_DEG); // MANUAL: tune on robot
+    public static double TURRET_FORWARD_OFFSET_RAD = 0.0; // MANUAL: calibrate turret "straight ahead" vs robot heading
+    public static double TURRET_ALIGNMENT_SIGN = 1.0; // Set to -1 if odometry alignment steers opposite direction
 
-    // Single-servo turret range: 0 deg (right) to 180 deg (left).
-    // If your linkage direction is opposite, swap RIGHT and LEFT values.
-    public static double TURRET_RIGHT_SERVO_POS = 0.0;
-    public static double TURRET_LEFT_SERVO_POS = 1.0;
-    public static double TURRET_FORWARD_SERVO_POS = (TURRET_RIGHT_SERVO_POS + TURRET_LEFT_SERVO_POS) / 2.0;
-    public static double TURRET_MIN_SERVO_POS = Math.min(TURRET_RIGHT_SERVO_POS, TURRET_LEFT_SERVO_POS);
-    public static double TURRET_MAX_SERVO_POS = Math.max(TURRET_RIGHT_SERVO_POS, TURRET_LEFT_SERVO_POS);
+    public static double TURRET_RIGHT_SERVO_POS = 0.0; // MANUAL: calibrate right hard limit
+    public static double TURRET_LEFT_SERVO_POS = 0.51; // MANUAL: calibrate left hard limit
 
-    // Positional-servo alignment tuning (servo position units per scheduler cycle)
-    public static double TURRET_MAX_PID_STEP_SERVO_POS = 0.02; // TODO: tune
-    public static double TURRET_RECOVERY_STEP_SERVO_POS = 0.01; // TODO: tune
+    public static double TURRET_MAX_PID_STEP_SERVO_POS = 0.02; // MANUAL: tune on robot
+    public static double TURRET_RECOVERY_STEP_SERVO_POS = 0.01; // MANUAL: tune on robot
 
-    // Flywheel velocity tolerance (ticks per second) to consider "at speed"
-    public static double FLYWHEEL_TPS_TOLERANCE = 20; // TODO: tune
+    public static double FLYWHEEL_TPS_TOLERANCE = 20; // MANUAL: tune on robot
 
-    // Idle flywheel speed used when not actively tracking an interpolated shooting target
-    public static double FLYWHEEL_IDLE_TPS = 150; // TODO: tune
-
-    // How long (seconds) to run the transfer motors to fire one ball
-    public static double SHOOT_DURATION_SECONDS = 0.5; // TODO: tune
-
-    public static double TICKS_PER_REV = 112; // 28 PPR * 4 = 112
-
-    // Hood positions
-    public static double CLOSE_HOOD = 0; // TODO: need to find
-    public static double FAR_HOOD = 0; // TODO: need to find
-
-    // Turret positions(direction turret is facing):
-    public static double INIT = 0; // should be forward? idk
-
-    // Flywheel speeds (remove if using interpolation)
-    public static long CLOSE_SHOT = 0; // TODO: need to find
-    public static long FAR_SHOT = 0; // TODO: need to find
+    public static double FLYWHEEL_IDLE_TPS = 150; // MANUAL: tune on robot
 }

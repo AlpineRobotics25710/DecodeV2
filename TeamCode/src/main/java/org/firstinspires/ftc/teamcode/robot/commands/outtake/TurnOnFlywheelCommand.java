@@ -30,7 +30,7 @@ public class TurnOnFlywheelCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        turret.stopFlywheel();
+        turret.setFlywheelTargetTPS(0.0);
     }
 
     private void updateFlywheelAndHood() {
