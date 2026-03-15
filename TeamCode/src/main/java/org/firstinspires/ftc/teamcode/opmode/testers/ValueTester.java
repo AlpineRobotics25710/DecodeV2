@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
 @Config
 @Configurable
 public class ValueTester extends LinearOpMode {
-    public static double hoodPos = 0.0;
     public static double flywheelTargetTPS = 0.0;
-    public static double turretPower = 0.0;
+    public static double turretServoPos = 0.0;
     public static double frontIntakePower = 0.0;
     public static double backIntakePower = 0.0;
 
@@ -28,9 +27,8 @@ public class ValueTester extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested() && opModeIsActive()) {
-            robot.turret.setHoodPosition(hoodPos);
             robot.turret.setFlywheelTargetTPS(flywheelTargetTPS);
-            robot.turret.setTurretPower(turretPower);
+            robot.turret.setTurretPos(turretServoPos);
 
             robot.intake.setPower(frontIntakePower, backIntakePower);
 
@@ -44,14 +42,8 @@ public class ValueTester extends LinearOpMode {
             CommonTelemetry.addData("Flywheel target tps", robot.turret.getFlywheelTargetTPS());
             CommonTelemetry.addData("Flywheel avg velocity", robot.turret.getFlywheelVelocity());
 
-            CommonTelemetry.addData("=== HOOD ===", "");
-            CommonTelemetry.addData("Hood Pos (set)", hoodPos);
-            CommonTelemetry.addData("Hood Pos (actual)", robot.turret.getHoodPosition());
-
             CommonTelemetry.addData("=== TURRET ===", "");
-            CommonTelemetry.addData("Turret Power (set)", turretPower);
-            CommonTelemetry.addData("TurretFront power", robot.turret.getTurretFrontPower());
-            CommonTelemetry.addData("TurretBack  power", robot.turret.getTurretBackPower());
+            CommonTelemetry.addData("Turret servo pos (set)", turretServoPos);
 
             CommonTelemetry.update();
             CommandScheduler.getInstance().run();

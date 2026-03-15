@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
@@ -9,7 +9,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.robot.AlpineRobot;
 import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
 import org.firstinspires.ftc.teamcode.robot.Interpolator;
-import org.firstinspires.ftc.teamcode.robot.commands.drive.PedroTeleOpDriveCommand;
+import org.firstinspires.ftc.teamcode.robot.commands.drive.GmzTeleOpDriveCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.BackIntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.intake.FrontIntakeCommand;
 import org.firstinspires.ftc.teamcode.robot.commands.outtake.TurnOnFlywheelCommand;
@@ -19,6 +19,7 @@ public abstract class BaseTeleOp extends CommandOpMode {
     protected AlpineRobot robot;
     protected GamepadEx driver1;
     protected GamepadEx driver2;
+    private TurnOnFlywheelCommand flywheelOnCommand;
 
     public abstract void initGamepads();
 
@@ -32,21 +33,23 @@ public abstract class BaseTeleOp extends CommandOpMode {
 
     @Override
     public void initialize() {
+        CommonTelemetry.init(telemetry);
         initGamepads();
 
         robot = new AlpineRobot(hardwareMap);
-        robot.drivetrain.setDefaultCommand(new PedroTeleOpDriveCommand(robot.drivetrain, driver()));
+        robot.drivetrain.setDefaultCommand(new GmzTeleOpDriveCommand(hardwareMap.get(DcMotor.class, "FrontLeftDrive"), hardwareMap.get(DcMotor.class, "BackLeftDrive"), hardwareMap.get(DcMotor.class, "FrontRightDrive"), hardwareMap.get(DcMotor.class, "BackRightDrive"), driver(), robot.drivetrain)); // or pedroteleopdrive command
+        flywheelOnCommand = new TurnOnFlywheelCommand(robot.turret, () -> robot.getDistanceFromGoal());
 
-        // Only "shoot" (HELP_POWER) if we are in shooting mode AND at target speed
-        frontIntakeButton().whenHeld(new FrontIntakeCommand(robot.intake, () -> robot.turret.isShootingMode() && robot.turret.isFlywheelAtTargetTPS()));
-        backIntakeButton().whenHeld(new BackIntakeCommand(robot.intake, () -> robot.turret.isShootingMode() && robot.turret.isFlywheelAtTargetTPS()));
+        frontIntakeButton().whenHeld(new FrontIntakeCommand(robot.intake, () -> robot.turret.isFlywheelAtTargetTPS()));
+        backIntakeButton().whenHeld(new BackIntakeCommand(robot.intake, () -> robot.turret.isFlywheelAtTargetTPS()));
 
-        // Toggle between active shooting and idle
-        flywheelToggle().whenPressed(new ConditionalCommand(
-                new InstantCommand(() -> robot.turret.idleFlywheel(), robot.turret),
-                new TurnOnFlywheelCommand(robot.turret, () -> robot.getDistanceFromGoal()),
-                () -> robot.turret.isShootingMode()
-        ));
+        flywheelToggle().whenPressed(new InstantCommand(() -> {
+            if (robot.turret.isFlywheelOn()) {
+                flywheelOnCommand.cancel();
+            } else {
+                flywheelOnCommand.schedule();
+            }
+        }));
     }
 
     @Override
@@ -57,10 +60,7 @@ public abstract class BaseTeleOp extends CommandOpMode {
         CommonTelemetry.addData("Distance from goal", robot.getDistanceFromGoal());
         CommonTelemetry.addData("target flywheel tps", robot.turret.getFlywheelTargetTPS());
         CommonTelemetry.addData("actual flywheel tps", robot.turret.getFlywheelVelocity());
-        CommonTelemetry.addData("is shooting mode", robot.turret.isShootingMode());
-        CommonTelemetry.addData("interpolated hood pos", Interpolator.getHoodPos(robot.getDistanceFromGoal()));
         CommonTelemetry.addData("interpolated flywheel tps", Interpolator.getFlywheelTPS(robot.getDistanceFromGoal()));
-        CommonTelemetry.addData("hood pos", robot.turret.getHoodPosition());
         CommonTelemetry.addData("front intake power", robot.intake.getFrontPower());
         CommonTelemetry.addData("back intake power", robot.intake.getBackPower());
         CommonTelemetry.update();

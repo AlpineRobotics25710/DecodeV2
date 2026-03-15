@@ -48,10 +48,10 @@ public class AlignTurretToGoalCommand extends CommandBase {
 
         if (targetTag != null) {
             // Horizontal tag error in degrees; Turret PID drives this to zero.
-            turret.setTurretAlignmentError(targetTag.getTargetXDegrees());
+            //turret.setTurretAlignmentError(targetTag.getTargetXDegrees());
         } else {
             // Tag not visible – enter recovery creep back toward last known direction
-            turret.onTagLost();
+            //turret.onTagLost();
         }
     }
 }
