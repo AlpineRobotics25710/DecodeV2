@@ -28,7 +28,6 @@ public class ValueTester extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested() && opModeIsActive()) {
-            robot.turret.setHoodPosition(hoodPos);
             robot.turret.setFlywheelTargetTPS(flywheelTargetTPS);
             robot.turret.setTurretPower(turretPower);
 
@@ -43,10 +42,6 @@ public class ValueTester extends LinearOpMode {
             CommonTelemetry.addData("FlyWheel TPS (set)", flywheelTargetTPS);
             CommonTelemetry.addData("Flywheel target tps", robot.turret.getFlywheelTargetTPS());
             CommonTelemetry.addData("Flywheel avg velocity", robot.turret.getFlywheelVelocity());
-
-            CommonTelemetry.addData("=== HOOD ===", "");
-            CommonTelemetry.addData("Hood Pos (set)", hoodPos);
-            CommonTelemetry.addData("Hood Pos (actual)", robot.turret.getHoodPosition());
 
             CommonTelemetry.addData("=== TURRET ===", "");
             CommonTelemetry.addData("Turret Power (set)", turretPower);

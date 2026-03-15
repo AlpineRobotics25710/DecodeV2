@@ -35,7 +35,6 @@ public class TurnOnFlywheelCommand extends CommandBase {
 
     private void updateFlywheelAndHood() {
         double dist = distanceSupplier.getAsDouble();
-        turret.setHoodPosition(Interpolator.getHoodPos(dist));
         turret.setFlywheelTargetTPS(Interpolator.getFlywheelTPS(dist));
     }
 }

@@ -30,7 +30,7 @@ public class FrontIntakeCommand extends CommandBase {
 
     private void applyPower() {
         if (!flywheelReachedSpeedSupplier.getAsBoolean()) {
-            intake.setPower(IntakeRollerConstants.INTAKE_POWER, IntakeRollerConstants.OFF);
+            intake.setPower(IntakeRollerConstants.INTAKE_POWER, IntakeRollerConstants.PREVENT_TRANSFER_POWER);
         } else {
             intake.setPower(IntakeRollerConstants.INTAKE_POWER, IntakeRollerConstants.HELP_POWER);
         }

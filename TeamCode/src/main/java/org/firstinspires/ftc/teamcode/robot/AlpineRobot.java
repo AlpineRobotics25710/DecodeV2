@@ -50,7 +50,6 @@ public class AlpineRobot extends Robot {
         // Turret
         CRServo turretFront = hardwareMap.get(CRServo.class, "TurretFront");
         CRServo turretBack = hardwareMap.get(CRServo.class, "TurretBack");
-        Servo hood = hardwareMap.get(Servo.class, "Hood");
 
         DcMotorEx flyLeft = hardwareMap.get(DcMotorEx.class, "FlyLeft");
         DcMotorEx flyRight = hardwareMap.get(DcMotorEx.class, "FlyRight");
@@ -61,7 +60,7 @@ public class AlpineRobot extends Robot {
         flyRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         flyLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        turret = new Turret(turretFront, turretBack, hood, flyLeft, flyRight);
+        turret = new Turret(turretFront, turretBack, flyLeft, flyRight);
 
         // Limelight init
         /*

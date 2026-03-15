@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robot.constants.TurretConstants;
 public class Turret extends SubsystemBase {
 
     private final CRServo turretFront, turretBack;
-    private final Servo hood;
     private final DcMotorEx flyLeft, flyRight;
     private final PIDFController flywheelPIDF;
     private final PIDFController turretPIDF;
@@ -25,10 +24,9 @@ public class Turret extends SubsystemBase {
     private double lastKnownErrorSign = 0;  // +1, -1, or 0 (unknown)
     private boolean inRecovery = false;
 
-    public Turret(CRServo turretFront, CRServo turretBack, Servo hood, DcMotorEx flyLeft, DcMotorEx flyRight) {
+    public Turret(CRServo turretFront, CRServo turretBack, DcMotorEx flyLeft, DcMotorEx flyRight) {
         this.turretFront = turretFront;
         this.turretBack = turretBack;
-        this.hood = hood;
         this.flyLeft = flyLeft;
         this.flyRight = flyRight;
 
@@ -83,14 +81,6 @@ public class Turret extends SubsystemBase {
 
     public double getTurretBackPower() {
         return turretBack.getPower();
-    }
-
-    public double getHoodPosition() {
-        return hood.getPosition();
-    }
-
-    public void setHoodPosition(double pos) {
-        hood.setPosition(pos);
     }
 
     public double getFlywheelTargetTPS() {
