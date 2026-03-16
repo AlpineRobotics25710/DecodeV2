@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.robot.CommonTelemetry;
 @Configurable
 public class FlywheelTester extends LinearOpMode {
 
-    public static double targetTPS = 0.0;
+    public static double targetPower = 0.0;
     public static double kp = turretKP, ki = turretKI, kd = turretKD, kf = turretKF;
 
     @Override
@@ -30,10 +30,10 @@ public class FlywheelTester extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            robot.turret.setFlywheelTargetTPS(targetTPS);
-            robot.turret.setFlywheelPIDF(kp, ki, kd, kf);
+            robot.turret.seFlywheelPower(targetPower);
+            //robot.turret.setFlywheelPIDF(kp, ki, kd, kf);
 
-            CommonTelemetry.addData("Target TPS", targetTPS);
+            CommonTelemetry.addData("Target power", targetPower);
             CommonTelemetry.addData("Actual TPS", robot.turret.getFlywheelVelocity());
             CommonTelemetry.addData("At Target?", robot.turret.isFlywheelAtTargetTPS());
             CommonTelemetry.update();

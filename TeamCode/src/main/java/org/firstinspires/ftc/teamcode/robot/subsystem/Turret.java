@@ -30,6 +30,11 @@ public class Turret implements Subsystem {
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
+    public void seFlywheelPower(double power){
+        flyRight.setPower(power);
+        flyLeft.setPower(power);
+    }
+
     public double getFlywheelTargetTPS() {
         return targetTPS;
     }
