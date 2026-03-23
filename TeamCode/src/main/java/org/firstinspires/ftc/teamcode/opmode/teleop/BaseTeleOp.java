@@ -36,8 +36,16 @@ public abstract class BaseTeleOp extends CommandOpMode {
         CommonTelemetry.init(telemetry);
         initGamepads();
 
+        GmzTeleOpDriveCommand gmzDrive = new GmzTeleOpDriveCommand(
+                hardwareMap.get(DcMotor.class, "FrontLeftDrive"),
+                hardwareMap.get(DcMotor.class, "BackLeftDrive"),
+                hardwareMap.get(DcMotor.class, "FrontRightDrive"),
+                hardwareMap.get(DcMotor.class, "BackRightDrive"), driver(),
+                robot.drivetrain
+        );
+
         robot = new AlpineRobot(hardwareMap);
-        robot.drivetrain.setDefaultCommand(new GmzTeleOpDriveCommand(hardwareMap.get(DcMotor.class, "FrontLeftDrive"), hardwareMap.get(DcMotor.class, "BackLeftDrive"), hardwareMap.get(DcMotor.class, "FrontRightDrive"), hardwareMap.get(DcMotor.class, "BackRightDrive"), driver(), robot.drivetrain)); // or pedroteleopdrive command
+        robot.drivetrain.setDefaultCommand(gmzDrive); // or pedroteleopdrive command
         flywheelOnCommand = new TurnOnFlywheelCommand(robot.turret, () -> robot.getDistanceFromGoal());
 
         frontIntakeButton().whenHeld(new FrontIntakeCommand(robot.intake, () -> robot.turret.isFlywheelAtTargetTPS()));

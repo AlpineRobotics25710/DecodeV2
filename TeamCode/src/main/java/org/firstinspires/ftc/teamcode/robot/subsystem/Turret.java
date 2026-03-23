@@ -51,7 +51,8 @@ public class Turret implements Subsystem {
     }
 
     public double getFlywheelVelocity() {
-        return (flyRight.getVelocity() + flyLeft.getVelocity()) / 2.0;
+        //return (flyRight.getVelocity() + flyLeft.getVelocity()) / 2.0; // take average of both
+        return flyRight.getVelocity(); // take just one
     }
 
     public void setFlywheelVelocity(double targetTPS) {
@@ -60,8 +61,9 @@ public class Turret implements Subsystem {
     }
 
     public void setFlywheelPIDF(double kp, double ki, double kd, double kf) {
-        flyRight.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(kp, ki, kd, kf));
-        flyLeft.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(kp, ki, kd, kf));
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(kp, ki, kd, kf);
+        flyRight.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        flyLeft.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
     }
 
     public boolean isFlywheelOn() {
@@ -72,11 +74,11 @@ public class Turret implements Subsystem {
         turretServo.setPosition(pos);
     }
 
-    /*@Override
+    @Override
     public void periodic() {
         if (targetTPS != prevTargetTPS) {
             setFlywheelVelocity(targetTPS);
             prevTargetTPS = targetTPS;
         }
-    }*/
+    }
 }
